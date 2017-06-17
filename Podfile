@@ -3,5 +3,8 @@ target 'MusicProject' do
 
   pod 'Alamofire'
   pod 'SwiftyJSON'
-
+  pod 'RealmSwift'
+  pod 'AlamofireImage'
+  pod 'AudioPlayerSwift'
+  
 end

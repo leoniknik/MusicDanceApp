@@ -7,3 +7,21 @@
 //
 
 import Foundation
+import RealmSwift
+
+class Song: Object {
+    
+    dynamic var id: Int = 0
+    dynamic var song_url: String = ""
+    dynamic var title: String = ""
+    dynamic var position: Int = 0
+    dynamic var length: Int = 0
+    dynamic var img_url: String = ""
+    dynamic var singer: String = ""
+    dynamic var playlist: Playlist?
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
+}

@@ -9,10 +9,12 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import AlamofireImage
 
 class APIManager {
 
     private static let SERVER_IP = "http://188.166.211.232"
+//    private static let SERVER_IP = "http://192.168.1.44:8000"
 
     private static let GET_PLAYLISTS_URL = "\(SERVER_IP)/musicapi/getplaylists"
     private static let GET_SONGS_URL = "\(SERVER_IP)/musicapi/getsongs"
@@ -21,27 +23,70 @@ class APIManager {
         
         let parameters: Parameters = [:]
         
-        request(URL: GET_PLAYLISTS_URL, method: .post, parameters: parameters, onSuccess: defaultOnSuccess, onError: defaultOnError)
+        request(URL: GET_PLAYLISTS_URL, method: .get, parameters: parameters, onSuccess: getPlaylistsOnSuccess, onError: defaultOnError)
         
     }
-//
-//    class func signUpOnSuccess(json: JSON) -> Void {
-//        print(json)
-//        let code = json["code"].int!
-//        if code == OK {
-//            NotificationCenter.default.post(name: .signUpCallback, object: nil)
-//        }
-//    }
+
     
-    private class func defaultOnSuccess(json: JSON) -> Void{
+    private class func getPlaylistsOnSuccess(json: JSON) -> Void {
+        
         print(json)
+        let data = json["response"].dictionaryValue
+        NotificationCenter.default.post(name: .getPlaylistsCallback, object: nil, userInfo: data)
+        
     }
+    
+    
+    class func getSongsRequest(playlist: Playlist) -> Void {
+        
+        let parameters: Parameters = [
+            "screen" : "xhdpi",
+            "playlist_id" : playlist.id
+        ]
+        
+        request(URL: GET_SONGS_URL, method: .get, parameters: parameters, onSuccess: getSongsOnSuccess, onError: defaultOnError)
+        
+    }
+    
+    
+    private class func getSongsOnSuccess(json: JSON) -> Void {
+        
+        print(json)
+        let data = json["response"].dictionaryValue
+        NotificationCenter.default.post(name: .getSongsCallback, object: nil, userInfo: data)
+        
+    }
+    
+    
+    class func getSongImage(song: Song) {
+        
+        let URL = "\(SERVER_IP)\(song.img_url)"
+        
+        Alamofire.request(URL).responseImage { response in
+            if let image = response.result.value {
+                print("image downloaded: \(image)")
+                NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image" : image])
+            }
+        }
+    
+    }
+    
+    private class func defaultOnSuccess(json: JSON) -> Void {
+        
+        print(json)
+        
+    }
+    
     
     private class func defaultOnError(error: Any) -> Void {
+        
         print(error)
+        
     }
     
+    
     private class func request(URL: String, method: HTTPMethod, parameters: Parameters, onSuccess: @escaping (JSON) -> Void , onError: @escaping (Any) -> Void) -> Void {
+        
         Alamofire.request(URL, method: method, parameters: parameters ).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
@@ -51,5 +96,7 @@ class APIManager {
                 onError(error)
             }
         }
+        
     }
+    
 }

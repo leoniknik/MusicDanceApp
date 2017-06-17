@@ -7,4 +7,19 @@
 //
 
 import Foundation
+import RealmSwift
 
+class Playlist: Object {
+    
+    dynamic var id: Int = 0
+    dynamic var schoolName: String = ""
+    dynamic var lastUpdate: Int = 0
+    dynamic var position: Int = 0
+    dynamic var title: String = ""
+    let songs = LinkingObjects(fromType: Song.self, property: "playlist")
+    
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+
+}

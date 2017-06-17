@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		07B991A02D508C3A14E167FB /* Pods_MusicProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4F5D06660379AEA5274272 /* Pods_MusicProject.framework */; };
+		CA396E811EF420DF00DF24EA /* SegueRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA396E801EF420DF00DF24EA /* SegueRouter.swift */; };
 		CA5E5B411EEC7D3E0049B210 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B401EEC7D3E0049B210 /* Playlist.swift */; };
 		CA5E5B431EEC7D530049B210 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B421EEC7D530049B210 /* Song.swift */; };
+		CA5E5B451EEC89140049B210 /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B441EEC89140049B210 /* PlaylistTableViewCell.swift */; };
+		CA5E5B471EEC8A8C0049B210 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B461EEC8A8C0049B210 /* DatabaseManager.swift */; };
+		CA5E5B4A1EEC8DE90049B210 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B491EEC8DE90049B210 /* NotificationManager.swift */; };
 		CA96180C1EEC74F900B75202 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180B1EEC74F900B75202 /* APIManager.swift */; };
 		CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */; };
 		CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */; };
@@ -23,8 +27,12 @@
 /* Begin PBXFileReference section */
 		4814D1F9607468A2CB628F18 /* Pods-MusicProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicProject/Pods-MusicProject.release.xcconfig"; sourceTree = "<group>"; };
 		4865E10CDDDD95DE94A95D72 /* Pods-MusicProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicProject/Pods-MusicProject.debug.xcconfig"; sourceTree = "<group>"; };
+		CA396E801EF420DF00DF24EA /* SegueRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueRouter.swift; sourceTree = "<group>"; };
 		CA5E5B401EEC7D3E0049B210 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		CA5E5B421EEC7D530049B210 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		CA5E5B441EEC89140049B210 /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
+		CA5E5B461EEC8A8C0049B210 /* DatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		CA5E5B491EEC8DE90049B210 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		CA96180B1EEC74F900B75202 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListOfPlaylistsViewController.swift; sourceTree = "<group>"; };
 		CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +75,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		CA5E5B481EEC8DB80049B210 /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				CA5E5B491EEC8DE90049B210 /* NotificationManager.swift */,
+			);
+			name = Extentions;
+			sourceTree = "<group>";
+		};
 		CA9618071EEC748C00B75202 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +107,7 @@
 			children = (
 				CAD0B8111EE482C000C8B2B1 /* Main.storyboard */,
 				CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */,
+				CA5E5B441EEC89140049B210 /* PlaylistTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -99,6 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				CA96180B1EEC74F900B75202 /* APIManager.swift */,
+				CA5E5B461EEC8A8C0049B210 /* DatabaseManager.swift */,
+				CA396E801EF420DF00DF24EA /* SegueRouter.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -124,6 +143,7 @@
 		CAD0B80C1EE482C000C8B2B1 /* MusicProject */ = {
 			isa = PBXGroup;
 			children = (
+				CA5E5B481EEC8DB80049B210 /* Extentions */,
 				CA96180A1EEC74A800B75202 /* Helpers */,
 				CA9618091EEC74A100B75202 /* Views */,
 				CA9618081EEC749900B75202 /* Models */,
@@ -261,11 +281,15 @@
 			files = (
 				CA5E5B431EEC7D530049B210 /* Song.swift in Sources */,
 				CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */,
+				CA5E5B4A1EEC8DE90049B210 /* NotificationManager.swift in Sources */,
 				CA96180C1EEC74F900B75202 /* APIManager.swift in Sources */,
+				CA5E5B451EEC89140049B210 /* PlaylistTableViewCell.swift in Sources */,
 				CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */,
 				CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */,
+				CA396E811EF420DF00DF24EA /* SegueRouter.swift in Sources */,
 				CA9618121EEC75CC00B75202 /* TrackViewController.swift in Sources */,
 				CA5E5B411EEC7D3E0049B210 /* Playlist.swift in Sources */,
+				CA5E5B471EEC8A8C0049B210 /* DatabaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
