@@ -146,40 +146,76 @@
                                 <rect key="frame" x="165" y="515" width="44" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_play"/>
+                                <connections>
+                                    <action selector="playOrPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tWB-u4-qIS"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iyP-DC-Wia">
                                 <rect key="frame" x="217" y="515" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_next"/>
+                                <connections>
+                                    <action selector="nextSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oeX-g5-Shx"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HGJ-15-0XW">
                                 <rect key="frame" x="265" y="515" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_repeat_off"/>
+                                <connections>
+                                    <action selector="repeatSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LNz-JJ-lK2"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K7p-J2-LfH">
                                 <rect key="frame" x="117" y="515" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_previous"/>
+                                <connections>
+                                    <action selector="previousSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sxv-zU-WsI"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="enL-Lc-6JT">
                                 <rect key="frame" x="69" y="515" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="ic_save_off"/>
+                                <connections>
+                                    <action selector="downloadSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HJ8-x6-Vl3"/>
+                                </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hN7-GJ-c9k">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hN7-GJ-c9k">
                                 <rect key="frame" x="16" y="392" width="343" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vcb-HE-7dg">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="default_album_v2" translatesAutoresizingMaskIntoConstraints="NO" id="vcb-HE-7dg">
                                 <rect key="frame" x="86" y="155" width="210" height="210"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vy2-K2-paU">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vy2-K2-paU">
                                 <rect key="frame" x="16" y="421" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="KGE-MC-PeJ">
+                                <rect key="frame" x="84" y="471" width="214" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="songSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="buq-07-1bh"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NOn-UF-MgH">
+                                <rect key="frame" x="16" y="476" width="62" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wM3-Ix-WwA">
+                                <rect key="frame" x="304" y="476" width="55" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -189,8 +225,16 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
+                        <outlet property="currentTimeLabel" destination="NOn-UF-MgH" id="THP-os-4iy"/>
+                        <outlet property="downloadSongButton" destination="enL-Lc-6JT" id="bFb-UQ-RqO"/>
+                        <outlet property="durationLabel" destination="wM3-Ix-WwA" id="dvZ-bG-PTm"/>
+                        <outlet property="nextSongButton" destination="iyP-DC-Wia" id="89f-B8-Smc"/>
+                        <outlet property="playOrPauseButton" destination="fZW-KB-Nw2" id="kxK-pL-KyT"/>
+                        <outlet property="previousSongButton" destination="K7p-J2-LfH" id="COc-MU-lCv"/>
+                        <outlet property="repeatSongButton" destination="HGJ-15-0XW" id="IZZ-O1-E5a"/>
                         <outlet property="singerLabel" destination="hN7-GJ-c9k" id="1Bu-3j-iYv"/>
                         <outlet property="songImage" destination="vcb-HE-7dg" id="tXM-t8-axY"/>
+                        <outlet property="songSlider" destination="KGE-MC-PeJ" id="AL8-ky-l9h"/>
                         <outlet property="titleLabel" destination="Vy2-K2-paU" id="du3-3j-5Ho"/>
                         <segue destination="Nza-6u-L8d" kind="show" identifier="toPlaylist" id="rJE-0t-9U5"/>
                     </connections>
@@ -202,6 +246,7 @@
     </scenes>
     <resources>
         <image name="background_infopage" width="320" height="568"/>
+        <image name="default_album_v2" width="160" height="160"/>
         <image name="ic_next" width="36" height="36"/>
         <image name="ic_play" width="36" height="36"/>
         <image name="ic_previous" width="36" height="36"/>

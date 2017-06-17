@@ -68,6 +68,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         if segue.identifier == SegueRouter.toAudioPlayer.rawValue {
             let destinationViewController = segue.destination as! TrackViewController
             destinationViewController.playlist = sender as? Playlist
+            destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
         }
         
     }

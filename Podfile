@@ -5,6 +5,6 @@ target 'MusicProject' do
   pod 'SwiftyJSON'
   pod 'RealmSwift'
   pod 'AlamofireImage'
-  pod 'AudioPlayerSwift'
+  pod 'Jukebox'
   
 end

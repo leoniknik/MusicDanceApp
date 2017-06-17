@@ -51,10 +51,9 @@ class DatabaseManager {
     }
     
     
-    class func getFirstSong(playlist: Playlist) -> Song {
-        
-        return playlist.songs.sorted(byKeyPath: "position").first!
-        
+    class func getSongByPosition(playlist: Playlist, position: Int) -> Song? {
+        let predicate = NSPredicate(format: "position == \(position)")
+        return playlist.songs.filter(predicate).first
     }
     
     

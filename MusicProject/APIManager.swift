@@ -11,6 +11,7 @@ import Alamofire
 import SwiftyJSON
 import AlamofireImage
 
+
 class APIManager {
 
     private static let SERVER_IP = "http://188.166.211.232"
@@ -61,15 +62,21 @@ class APIManager {
     class func getSongImage(song: Song) {
         
         let URL = "\(SERVER_IP)\(song.img_url)"
-        
-        Alamofire.request(URL).responseImage { response in
+        let safeURL = URL.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+
+        Alamofire.request(safeURL).responseImage { response in
             if let image = response.result.value {
-                print("image downloaded: \(image)")
                 NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image" : image])
             }
         }
-    
+        
     }
+    
+    
+    class func getServerIP() -> String {
+        return SERVER_IP
+    }
+    
     
     private class func defaultOnSuccess(json: JSON) -> Void {
         
