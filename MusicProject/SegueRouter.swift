@@ -12,5 +12,9 @@ enum SegueRouter: String {
     
     case toAudioPlayer = "toAudioPlayer"
     case toPlaylist = "toPlaylist"
+    case toDanceFamily = "toDanceFamily"
+    case toDonate = "toDonate"
+    case toMail = "toMail"
+    case toClub = "toClub"
     
 }

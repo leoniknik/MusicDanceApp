@@ -27,6 +27,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     @IBOutlet weak var downloadSongButton: UIButton!
     @IBOutlet weak var repeatSongButton: UIButton!
     
+    @IBOutlet weak var playlistItem: UIBarButtonItem!
+    @IBOutlet weak var backItem: UIBarButtonItem!
+    
+    
     var playlist: Playlist?
     var song: Song?
     var viewMode: TrackViewMode?
@@ -54,6 +58,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         UIApplication.shared.beginReceivingRemoteControlEvents()
         
     }
+    
 
     
     func createPlaylist() {
@@ -61,9 +66,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         let SERVER_IP = APIManager.getServerIP()
         
         jukebox = Jukebox(delegate: self, items: [
-            JukeboxItem(URL: URL(string: "http://www.kissfm.ro/listen.pls")!)
             ])!
-        // получение списка песен отсортированных по позиции
+        //DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
         if let songs = playlist?.songs {
             for song in songs {
                 jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
@@ -76,7 +80,36 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     func setupUI() {
         
         resetUI()
-        //songSlider.setThumbImage(UIImage(named: "thumb"), for: UIControlState())
+        
+        let titlePlaylist = playlist!.schoolName
+        
+        let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
+        label.backgroundColor = UIColor.clear
+        label.numberOfLines = 2
+        label.font = UIFont.boldSystemFont(ofSize: 16.0)
+        label.textAlignment = .center
+        label.textColor = UIColor.white
+        
+        //customize multiline text for navigationbar title
+        let firstAttributes = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 16)]
+        let firstLine = NSMutableAttributedString(string:"\(titlePlaylist)\n", attributes:firstAttributes)
+        let secondAttributes =  [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 13)]
+        let secondLine = NSAttributedString(string:"NOW PLAYING", attributes:secondAttributes)
+        firstLine.append(secondLine)
+        
+        label.attributedText = firstLine
+        self.navigationItem.titleView = label
+        
+        //customize thumb's size
+        let upThumbImage : UIImage = UIImage(named: "circle-24")!
+        let size = CGSize(width: 10, height: 10)
+        UIGraphicsBeginImageContext(size)
+        upThumbImage.draw(in: CGRect(x:0, y:0, width:size.width, height:size.height))
+        let resizeImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        songSlider.setThumbImage(resizeImage, for: .normal)
+        
         songSlider.minimumTrackTintColor = UIColor.white
         songSlider.maximumTrackTintColor = UIColor.gray
         
@@ -100,11 +133,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     func jukeboxStateDidChange(_ jukebox: Jukebox) {
-        
-        UIView.animate(withDuration: 0.3, animations: { () -> Void in
-            self.playOrPauseButton.alpha = jukebox.state == .loading ? 0 : 1
-            self.playOrPauseButton.isEnabled = jukebox.state == .loading ? false : true
-        })
         
         if jukebox.state == .ready {
             playOrPauseButton.setImage(UIImage(named: "ic_play"), for: UIControlState())
@@ -190,12 +218,14 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         let userInfo = notification.userInfo as! [String : Any]
         let image = userInfo["image"]
+        //проверка не поменялся ли трек
         songImage.image = image as? UIImage
         
     }
     
     
     @IBAction func playOrPause(_ sender: Any) {
+        
         switch jukebox.state {
         case .ready :
             jukebox.play(atIndex: 0)
@@ -206,20 +236,27 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         default:
             jukebox.stop()
         }
+        
     }
     
     @IBAction func nextSong(_ sender: Any) {
+        
         jukebox.playNext()
-        //поменять картинку
+        let posititon = jukebox.playIndex + 1
+        setupSong(position: posititon)
+        
     }
     
     @IBAction func previousSong(_ sender: Any) {
+        
         if jukebox.playIndex == 0 {
             jukebox.replayCurrentItem()
         } else {
             jukebox.playPrevious()
-            //поиенять картинку
+            let posititon = jukebox.playIndex + 1
+            setupSong(position: posititon)
         }
+        
     }
     
     @IBAction func repeatSong(_ sender: Any) {
@@ -231,15 +268,33 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     @IBAction func songSliderValueChanged(_ sender: Any) {
+        
         if let duration = jukebox.currentItem?.meta.duration {
             jukebox.seek(toSecond: Int(Double(songSlider.value) * duration))
         }
+        
     }
     
     func resetUI() {
+        
         durationLabel.text = "00:00"
         currentTimeLabel.text = "00:00"
         songSlider.value = 0
+        
+    }
+    
+    deinit {
+        jukebox.stop()
+    }
+    
+    
+    @IBAction func goToPlaylist(_ sender: Any) {
+        
+    }
+    
+    
+    @IBAction func goBack(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
     
 }

@@ -9,6 +9,8 @@
 import Foundation
 
 enum TrackViewMode {
+    
     case fromListOfPlaylists
     case fromPlaylist
+    
 }

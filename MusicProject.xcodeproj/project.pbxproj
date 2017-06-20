@@ -18,10 +18,12 @@
 		CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */; };
 		CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */; };
 		CA9618121EEC75CC00B75202 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9618111EEC75CC00B75202 /* TrackViewController.swift */; };
+		CAB91B181EF94E8200A69544 /* MenuViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB91B171EF94E8200A69544 /* MenuViewCell.swift */; };
 		CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */; };
 		CAD0B8131EE482C000C8B2B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8111EE482C000C8B2B1 /* Main.storyboard */; };
 		CAD0B8151EE482C000C8B2B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8141EE482C000C8B2B1 /* Assets.xcassets */; };
 		CAD0B8181EE482C000C8B2B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */; };
+		CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */; };
 		CAE70C101EF5B47C0069106E /* TrackViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,12 +41,14 @@
 		CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListOfPlaylistsViewController.swift; sourceTree = "<group>"; };
 		CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		CA9618111EEC75CC00B75202 /* TrackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
+		CAB91B171EF94E8200A69544 /* MenuViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewCell.swift; sourceTree = "<group>"; };
 		CAD0B80A1EE482C000C8B2B1 /* MusicProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CAD0B8121EE482C000C8B2B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CAD0B8141EE482C000C8B2B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CAD0B8171EE482C000C8B2B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CAD0B8191EE482C000C8B2B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackViewMode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +87,7 @@
 				CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */,
 				CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */,
 				CA9618111EEC75CC00B75202 /* TrackViewController.swift */,
+				CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -102,6 +107,7 @@
 				CAD0B8111EE482C000C8B2B1 /* Main.storyboard */,
 				CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */,
 				CA5E5B441EEC89140049B210 /* PlaylistTableViewCell.swift */,
+				CAB91B171EF94E8200A69544 /* MenuViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -289,7 +295,9 @@
 				CA5E5B451EEC89140049B210 /* PlaylistTableViewCell.swift in Sources */,
 				CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */,
 				CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */,
+				CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */,
 				CA396E811EF420DF00DF24EA /* SegueRouter.swift in Sources */,
+				CAB91B181EF94E8200A69544 /* MenuViewCell.swift in Sources */,
 				CA9618121EEC75CC00B75202 /* TrackViewController.swift in Sources */,
 				CA5E5B411EEC7D3E0049B210 /* Playlist.swift in Sources */,
 				CA5E5B471EEC8A8C0049B210 /* DatabaseManager.swift in Sources */,

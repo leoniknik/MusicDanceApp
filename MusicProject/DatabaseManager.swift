@@ -50,6 +50,11 @@ class DatabaseManager {
         
     }
     
+    class func getSongsOrderedByPosition(playlist: Playlist) -> Results<Song> {
+        
+        return playlist.songs.sorted(byKeyPath: "position")
+        
+    }
     
     class func getSongByPosition(playlist: Playlist, position: Int) -> Song? {
         let predicate = NSPredicate(format: "position == \(position)")

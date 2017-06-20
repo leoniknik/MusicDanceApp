@@ -19,13 +19,42 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        setupUI()
         playlistsTable.dataSource = self
         playlistsTable.delegate = self
         playlistsTable.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallback(_:)), name: .getPlaylistsCallback, object: nil)
         APIManager.getPlaylistsRequest()
+        //удалять тех которых нет
         
     }
+    
+    
+    func setupUI() {
+        
+//        self.navigationController?.navigationBar.
+//        self.navigationController?.navigationBar.isTranslucent = false
+//        self.navigationController?.view.backgroundColor = UIColor.black
+        
+        let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
+        label.backgroundColor = UIColor.clear
+        label.numberOfLines = 2
+        label.font = UIFont.boldSystemFont(ofSize: 16.0)
+        label.textAlignment = .center
+        label.textColor = UIColor.white
+        
+        //customize multiline text
+        let firstAttributes = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 16)]
+        let firstLine = NSMutableAttributedString(string:"DANCE FAMILY\n", attributes:firstAttributes)
+        let secondAttributes =  [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 13)]
+        let secondLine = NSAttributedString(string:"MUSIC", attributes:secondAttributes)
+        firstLine.append(secondLine)
+        
+        label.attributedText = firstLine
+        self.navigationItem.titleView = label
+        
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -38,7 +67,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         let cell = playlistsTable.dequeueReusableCell(withIdentifier: "PlaylistTableViewCell") as! PlaylistTableViewCell
         let index = indexPath.row
         cell.schoolName.text = playlists[index].schoolName
-        cell.playlistImage.image = UIImage(named: "p_\(index+1)")
+        cell.playlistImage.image = UIImage(named: "p_\(index % 17 + 1)")
         return cell
         
     }
