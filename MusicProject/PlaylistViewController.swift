@@ -15,5 +15,15 @@ class PlaylistViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        //transparent navigationbar
+        navigationController?.navigationBar.barTintColor = UIColor.clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        
+    }
+    
 }

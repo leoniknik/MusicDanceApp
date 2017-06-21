@@ -12,6 +12,8 @@ import SwiftyJSON
 import MediaPlayer
 import Jukebox
 
+//TODO: нажатие на любую часть слайдера
+
 class TrackViewController: UIViewController, JukeboxDelegate {
 
     @IBOutlet weak var singerLabel: UILabel!
@@ -59,6 +61,15 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        //transparent navigationbar
+        navigationController?.navigationBar.barTintColor = UIColor.clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        
+    }
 
     
     func createPlaylist() {
@@ -67,11 +78,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         jukebox = Jukebox(delegate: self, items: [
             ])!
-        //DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
-        if let songs = playlist?.songs {
-            for song in songs {
-                jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
-            }
+        
+        let songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
+        for song in songs {
+            jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
         }
         
     }
@@ -294,7 +304,9 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     
     @IBAction func goBack(_ sender: Any) {
+        
         self.navigationController?.popViewController(animated: true)
+        
     }
     
 }

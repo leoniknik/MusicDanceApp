@@ -12,9 +12,28 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var menuTable: UITableView!
     
-    //let menu
+    struct Menu {
+        var image: UIImage
+        var title: String
+        
+        init(image: UIImage, title: String) {
+            self.image = image
+            self.title = title
+        }
+        
+    }
+    
+    let menu: [Menu] = [
+        Menu(image: UIImage(named: "ic_share_all")!, title: "Рассказать друзьям"),
+        Menu(image: UIImage(named: "ic_info_menu")!, title: "Dance Family"),
+        Menu(image: UIImage(named: "ic_save_on")!, title: "Сохраненные аудиозаписи"),
+        Menu(image: UIImage(named: "ic_rating_menu")!, title: "Оценить приложение"),
+        Menu(image: UIImage(named: "ic_money_menu")!, title: "Поддержать проект"),
+        Menu(image: UIImage(named: "ic_email_menu")!, title: "Написать разработчикам")
+    ]
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         setupUI()
         menuTable.dataSource = self
@@ -22,31 +41,30 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
 
-    func setupUI() {
+    override func viewWillAppear(_ animated: Bool) {
         
         //transparent navigationbar
+        navigationController?.navigationBar.barTintColor = UIColor.clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
         
-//        //self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-//        //self.navigationController?.navigationBar.shadowImage = UIImage()
-//        self.navigationController?.navigationBar.isTranslucent = true
-//        self.navigationController?.view.backgroundColor = UIColor.clear
-        
-        let bar: UINavigationBar! =  self.navigationController?.navigationBar
-        
-        bar.tintColor = UIColor.white
-        bar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        bar.shadowImage = UIImage()
-        bar.isTranslucent = true
+    }
+    
+    func setupUI() {
         
         //transparent tableview
         menuTable.tableFooterView = UIView(frame: CGRect.zero)
         menuTable.backgroundColor = .clear
         menuTable.separatorStyle = .none
+        
+        //disable scrolling
+        menuTable.isScrollEnabled = false
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 6
+        return menu.count
         
     }
     
@@ -54,7 +72,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let cell = menuTable.dequeueReusableCell(withIdentifier: "MenuViewCell") as! MenuViewCell
         let index = indexPath.row
-        
+        cell.icon.image = menu[index].image
+        cell.title.text = menu[index].title
+        cell.isHighlighted = false
         return cell
         
     }
@@ -70,10 +90,17 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         cell.backgroundColor = .clear
         
+        //transparent selection of cell
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 211.0/255.0, green: 211.0/255.0, blue: 211.0/255.0, alpha: 0.35)
+        cell.selectedBackgroundView = view
+        
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let index = indexPath.row
         
@@ -86,6 +113,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             case 5: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
             default: break
         }
+        
+        
         
     }
     

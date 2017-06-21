@@ -29,12 +29,16 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barTintColor = UIColor.black
+        navigationController?.navigationBar.setBackgroundImage(UIImage(color: UIColor.black), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
+    }
     
     func setupUI() {
-        
-//        self.navigationController?.navigationBar.
-//        self.navigationController?.navigationBar.isTranslucent = false
-//        self.navigationController?.view.backgroundColor = UIColor.black
         
         let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
         label.backgroundColor = UIColor.clear
