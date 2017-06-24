@@ -13,6 +13,7 @@ import MediaPlayer
 import Jukebox
 
 //TODO: нажатие на любую часть слайдера
+//добавить блюр
 
 class TrackViewController: UIViewController, JukeboxDelegate {
 
@@ -37,7 +38,12 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     var song: Song?
     var viewMode: TrackViewMode?
     var jukebox : Jukebox!
+    var repeatState: RepeatState = .off
     
+    enum RepeatState {
+        case on
+        case off
+    }
     
     override func viewDidLoad() {
         
@@ -58,7 +64,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         }
         
         UIApplication.shared.beginReceivingRemoteControlEvents()
-        
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,7 +117,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         self.navigationItem.titleView = label
         
         //customize thumb's size
-        let upThumbImage : UIImage = UIImage(named: "circle-24")!
+        let upThumbImage: UIImage = UIImage(named: "circle-24")!
         let size = CGSize(width: 10, height: 10)
         UIGraphicsBeginImageContext(size)
         upThumbImage.draw(in: CGRect(x:0, y:0, width:size.width, height:size.height))
@@ -123,11 +129,15 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         songSlider.minimumTrackTintColor = UIColor.white
         songSlider.maximumTrackTintColor = UIColor.gray
         
+        //initialization gesture recognizer
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
+        self.songSlider.addGestureRecognizer(tapGestureRecognizer)
+        
     }
     
     
     func jukeboxDidLoadItem(_ jukebox: Jukebox, item: JukeboxItem) {
-        //print("Jukebox did load: \(item.URL.lastPathComponent)")
+        print("Jukebox did load: \(item.URL.lastPathComponent)")
     }
     
     func jukeboxPlaybackProgressDidChange(_ jukebox: Jukebox) {
@@ -137,6 +147,17 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             songSlider.value = value
             populateLabelWithTime(currentTimeLabel, time: currentTime)
             populateLabelWithTime(durationLabel, time: duration)
+            
+            //should pay next track or repeat
+            if currentTimeLabel.text! == durationLabel.text! {
+                if repeatState == .off {
+                    jukebox.playNext()
+                }
+                else {
+                    jukebox.replayCurrentItem()
+                }
+            }
+            
         } else {
             resetUI()
         }
@@ -158,7 +179,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             }
             playOrPauseButton.setImage(UIImage(named: imageName), for: UIControlState())
         }
-     //   print("Jukebox state changed to \(jukebox.state)")
+        print("Jukebox state changed to \(jukebox.state)")
     }
     
     func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
@@ -263,14 +284,21 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             jukebox.replayCurrentItem()
         } else {
             jukebox.playPrevious()
-            let posititon = jukebox.playIndex + 1
+            let posititon = jukebox.playIndex - 1
             setupSong(position: posititon)
         }
         
     }
     
     @IBAction func repeatSong(_ sender: Any) {
-        //снова запускать трек
+        switch repeatState {
+        case .off:
+            repeatState = .on
+            repeatSongButton.setImage(UIImage(named: "ic_repeat_on"), for: UIControlState())
+        case .on:
+            repeatState = .off
+            repeatSongButton.setImage(UIImage(named: "ic_repeat_off"), for: UIControlState())
+        }
     }
     
     @IBAction func downloadSong(_ sender: Any) {
@@ -293,12 +321,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
     }
     
-    deinit {
-        jukebox.stop()
-    }
-    
     
     @IBAction func goToPlaylist(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: SegueRouter.toPlaylist.rawValue, sender: playlist)
         
     }
     
@@ -306,7 +332,54 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     @IBAction func goBack(_ sender: Any) {
         
         self.navigationController?.popViewController(animated: true)
+        //когда выходим, что делать с треком?
+        jukebox.stop()
         
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == SegueRouter.toPlaylist.rawValue {
+            let destinationViewController = segue.destination as! PlaylistViewController
+            destinationViewController.playlist = sender as? Playlist
+            destinationViewController.position = jukebox.playIndex
+        }
+        
+    }
+
+    //slider touch up for change value
+    func sliderTapped(gestureRecognizer: UIGestureRecognizer) {
+        
+        let pointTapped: CGPoint = gestureRecognizer.location(in: self.view)
+        let positionOfSlider: CGPoint = songSlider.frame.origin
+        let widthOfSlider: CGFloat = songSlider.frame.size.width
+        let newValue = ((pointTapped.x - positionOfSlider.x) * CGFloat(songSlider.maximumValue) / widthOfSlider)
+        
+        if jukebox.state == .playing {
+            jukebox.pause()
+            if let duration = jukebox.currentItem?.meta.duration {
+                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+                songSlider.setValue(Float(newValue), animated: true)
+                populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
+            }
+            jukebox.play()
+        }
+        else if jukebox.state == .ready {
+            jukebox.play()
+            if let duration = jukebox.currentItem?.meta.duration {
+                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+                songSlider.setValue(Float(newValue), animated: true)
+                populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
+            }
+        }
+        else {
+            if let duration = jukebox.currentItem?.meta.duration {
+                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+                songSlider.setValue(Float(newValue), animated: true)
+                populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
+            }
+        }
     }
     
 }

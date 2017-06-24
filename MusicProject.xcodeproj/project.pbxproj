@@ -19,6 +19,8 @@
 		CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */; };
 		CA9618121EEC75CC00B75202 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9618111EEC75CC00B75202 /* TrackViewController.swift */; };
 		CAB245681EF9876C0033AEA8 /* UIImage+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB245671EF9876C0033AEA8 /* UIImage+Color.swift */; };
+		CAB2456C1EFD555A0033AEA8 /* SongViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB2456B1EFD555A0033AEA8 /* SongViewCell.swift */; };
+		CAB2456E1EFE736F0033AEA8 /* Collection+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB2456D1EFE736F0033AEA8 /* Collection+Shuffle.swift */; };
 		CAB91B181EF94E8200A69544 /* MenuViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB91B171EF94E8200A69544 /* MenuViewCell.swift */; };
 		CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */; };
 		CAD0B8131EE482C000C8B2B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8111EE482C000C8B2B1 /* Main.storyboard */; };
@@ -43,6 +45,8 @@
 		CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		CA9618111EEC75CC00B75202 /* TrackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
 		CAB245671EF9876C0033AEA8 /* UIImage+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Color.swift"; sourceTree = "<group>"; };
+		CAB2456B1EFD555A0033AEA8 /* SongViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongViewCell.swift; sourceTree = "<group>"; };
+		CAB2456D1EFE736F0033AEA8 /* Collection+Shuffle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Shuffle.swift"; sourceTree = "<group>"; };
 		CAB91B171EF94E8200A69544 /* MenuViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewCell.swift; sourceTree = "<group>"; };
 		CAD0B80A1EE482C000C8B2B1 /* MusicProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +84,7 @@
 			children = (
 				CA5E5B491EEC8DE90049B210 /* NotificationManager.swift */,
 				CAB245671EF9876C0033AEA8 /* UIImage+Color.swift */,
+				CAB2456D1EFE736F0033AEA8 /* Collection+Shuffle.swift */,
 			);
 			name = Extentions;
 			sourceTree = "<group>";
@@ -111,6 +116,7 @@
 				CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */,
 				CA5E5B441EEC89140049B210 /* PlaylistTableViewCell.swift */,
 				CAB91B171EF94E8200A69544 /* MenuViewCell.swift */,
+				CAB2456B1EFD555A0033AEA8 /* SongViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -300,12 +306,14 @@
 				CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */,
 				CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */,
 				CAB245681EF9876C0033AEA8 /* UIImage+Color.swift in Sources */,
+				CAB2456E1EFE736F0033AEA8 /* Collection+Shuffle.swift in Sources */,
 				CA396E811EF420DF00DF24EA /* SegueRouter.swift in Sources */,
 				CAB91B181EF94E8200A69544 /* MenuViewCell.swift in Sources */,
 				CA9618121EEC75CC00B75202 /* TrackViewController.swift in Sources */,
 				CA5E5B411EEC7D3E0049B210 /* Playlist.swift in Sources */,
 				CA5E5B471EEC8A8C0049B210 /* DatabaseManager.swift in Sources */,
 				CAE70C101EF5B47C0069106E /* TrackViewMode.swift in Sources */,
+				CAB2456C1EFD555A0033AEA8 /* SongViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
