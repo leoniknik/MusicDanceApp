@@ -12,7 +12,6 @@ import SwiftyJSON
 import MediaPlayer
 import Jukebox
 
-//TODO: нажатие на любую часть слайдера
 //добавить блюр
 
 class TrackViewController: UIViewController, JukeboxDelegate {
@@ -32,6 +31,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBOutlet weak var playlistItem: UIBarButtonItem!
     @IBOutlet weak var backItem: UIBarButtonItem!
+    @IBOutlet weak var backgroundImage: UIImageView!
     
     
     var playlist: Playlist?
@@ -39,11 +39,13 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     var viewMode: TrackViewMode?
     var jukebox : Jukebox!
     var repeatState: RepeatState = .off
+
     
     enum RepeatState {
         case on
         case off
     }
+    
     
     override func viewDidLoad() {
         
@@ -53,15 +55,11 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
         
-        
-        if viewMode == TrackViewMode.fromListOfPlaylists {
-            createPlaylist()
-            setupSong(position: 1)
-            APIManager.getSongsRequest(playlist: playlist!)
-        }
-        else if viewMode == TrackViewMode.fromPlaylist {
-            //возврат и установка правильного трека и картинки
-        }
+ 
+        SongManager.setIndex(value: 0)
+        createPlaylist()
+        //setupSong(position: Index.getIndex())
+        APIManager.getSongsRequest(playlist: playlist!)
         
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
@@ -86,16 +84,21 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             ])!
         
         let songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
+        SongManager.songs.removeAll()
+        SongManager.setIndex(value: 0)
         for song in songs {
             jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
+            SongManager.songs.append(song)
         }
-        
+        SongManager.backup = SongManager.songs
     }
     
     
     func setupUI() {
         
         resetUI()
+        
+        backgroundImage.addBlurEffect()
         
         let titlePlaylist = playlist!.schoolName
         
@@ -151,7 +154,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             //should pay next track or repeat
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
-                    jukebox.playNext()
+                    let index = SongManager.getNextPosition()
+                    jukebox.play(atIndex: index)
                 }
                 else {
                     jukebox.replayCurrentItem()
@@ -196,9 +200,11 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             case .remoteControlPause :
                 jukebox.pause()
             case .remoteControlNextTrack :
-                jukebox.playNext()
+                let index = SongManager.getNextPosition()
+                jukebox.play(atIndex: index)
             case .remoteControlPreviousTrack:
-                jukebox.playPrevious()
+                let index = SongManager.getPreviousPosition()
+                jukebox.play(atIndex: index)
             case .remoteControlTogglePlayPause:
                 if jukebox.state == .playing {
                     jukebox.pause()
@@ -272,9 +278,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBAction func nextSong(_ sender: Any) {
         
-        jukebox.playNext()
-        let posititon = jukebox.playIndex + 1
-        setupSong(position: posititon)
+        let index = SongManager.getNextPosition()
+        jukebox.play(atIndex: index)
+//        let posititon = jukebox.playIndex + 1
+//        setupSong(position: posititon)
         
     }
     
@@ -283,9 +290,11 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         if jukebox.playIndex == 0 {
             jukebox.replayCurrentItem()
         } else {
-            jukebox.playPrevious()
-            let posititon = jukebox.playIndex - 1
-            setupSong(position: posititon)
+            let index = SongManager.getPreviousPosition()
+            jukebox.play(atIndex: index)
+            
+//            let posititon = jukebox.playIndex - 1
+//            setupSong(position: posititon)
         }
         
     }
@@ -334,7 +343,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         self.navigationController?.popViewController(animated: true)
         //когда выходим, что делать с треком?
         jukebox.stop()
-        
+        Shuffle.setOffState()
+        SongManager.normalizeSongs()
     }
     
     
@@ -343,7 +353,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         if segue.identifier == SegueRouter.toPlaylist.rawValue {
             let destinationViewController = segue.destination as! PlaylistViewController
             destinationViewController.playlist = sender as? Playlist
-            destinationViewController.position = jukebox.playIndex
+//            destinationViewController.position = jukebox.playIndex
+            destinationViewController.jukebox = jukebox
         }
         
     }

@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "hilk_xxxhdpi.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_shuffle_off2_2_toolbar.png",
       "scale" : "2x"
     },
     {

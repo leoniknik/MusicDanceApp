@@ -105,13 +105,13 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         let index = indexPath.row
         
         switch index {
-            case 0: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            case 1: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            case 2: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            case 3: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            case 4: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            case 5: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-            default: break
+        case 0: share(tableView: tableView, indexPath: indexPath)
+        case 1: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
+        case 2: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
+        case 3: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
+        case 4: self.performSegue(withIdentifier: SegueRouter.toDonate.rawValue, sender: nil)
+        case 5: self.performSegue(withIdentifier: SegueRouter.toMail.rawValue, sender: nil)
+        default: break
         }
         
     }
@@ -125,6 +125,22 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 //            destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
 //        }
         
+    }
+    
+    func share(tableView: UITableView, indexPath: IndexPath) {
+        
+            let textToShare = "Включай быстрее Dance Family Music, ждем только тебя!\nТеперь все клубы DF всегда с тобой!\nСкачай DF Music прямо сейчас"
+        
+            let objectsToShare = [textToShare]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            self.present(activityVC, animated: true, completion: nil)
+            
+            if let popView = activityVC.popoverPresentationController {
+                popView.sourceView = tableView
+                popView.sourceRect = tableView.cellForRow(at: indexPath)!.frame
+            }
+
     }
     
 }

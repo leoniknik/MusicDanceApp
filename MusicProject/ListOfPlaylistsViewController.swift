@@ -57,6 +57,8 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         label.attributedText = firstLine
         self.navigationItem.titleView = label
         
+        //disable some scrolling 
+        
     }
     
     

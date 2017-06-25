@@ -13,17 +13,12 @@ import Jukebox
 class PlaylistViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var songsTable: UITableView!
-    
-    enum ShuffleState {
-        case on
-        case off
-    }
+    @IBOutlet weak var shuffleItem: UIBarButtonItem!
+    @IBOutlet weak var backgroundImage: UIImageView!
     
     var playlist: Playlist?
-    var songs: Results<Song>?
-    var position: Int?
     var jukebox: Jukebox!
-    var shuffleState: ShuffleState = .off
+    
 
     override func viewDidLoad() {
         
@@ -31,7 +26,6 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         songsTable.dataSource = self
         songsTable.delegate = self
         songsTable.separatorStyle = .none
-        songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
         setupUI()
         
     }
@@ -53,6 +47,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func setupUI() {
+        
+        backgroundImage.addBlurEffect()
         
         //transparent tableview
         songsTable.tableFooterView = UIView(frame: CGRect.zero)
@@ -78,6 +74,14 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         label.attributedText = firstLine
         self.navigationItem.titleView = label
+        
+        //baritem
+        if Shuffle.getState() == .off {
+            shuffleItem.image = UIImage(named: "ic_shuffle_off")
+        }
+        else {
+            shuffleItem.image = UIImage(named: "ic_shuffle_on")
+        }
 
     }
     
@@ -95,7 +99,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return songs!.count
+        return SongManager.songs.count
         
     }
     
@@ -104,7 +108,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cell = songsTable.dequeueReusableCell(withIdentifier: "SongViewCell") as! SongViewCell
         let index = indexPath.row
-        if index == position {
+        if index == SongManager.getIndex() {
             cell.number.textColor = UIColor.red
             cell.name.textColor = UIColor.red
             cell.duration.textColor = UIColor.red
@@ -115,8 +119,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             cell.duration.textColor = UIColor.white
         }
         cell.number.text = "\(index + 1)"
-        cell.name.text = songs![index].title
-        let time = songs![index].length
+        cell.name.text = SongManager.songs[index].title
+        let time = SongManager.songs[index].length
         let minutes = Int(time / 60)
         let seconds = Int(time) - minutes * 60
         cell.duration.text = String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
@@ -131,22 +135,27 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         let index = indexPath.row
         self.navigationController?.popViewController(animated: true)
         let previousController = self.navigationController?.topViewController as! TrackViewController
-        let position = songs![index].position
+        let position = SongManager.songs[index].position
         let juckboxItemPosition = position - 1
-        let songPosition = position
+        SongManager.setIndex(bySongPosition: position)
         previousController.jukebox.play(atIndex: juckboxItemPosition)
-        previousController.setupSong(position: songPosition)
+        //previousController.setupSong(position: songPosition)
         
     }
     
     
     @IBAction func shuffle(_ sender: Any) {
-        var juckboxItems: [JukeboxItem] = []
-        for item in jukebox.queuedItems {
-            juckboxItems.append(item)
+        if Shuffle.getState() == .off {
+            SongManager.shuffleSongs()
+            Shuffle.switchState()
+            shuffleItem.image = UIImage(named: "ic_shuffle_on")
         }
-        juckboxItems.shuffle()
-        
+        else {
+            Shuffle.switchState()
+            SongManager.normalizeSongs()
+            shuffleItem.image = UIImage(named: "ic_shuffle_off")
+        }
+        songsTable.reloadData()
     }
     
     
