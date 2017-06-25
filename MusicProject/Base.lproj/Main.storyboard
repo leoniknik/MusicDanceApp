@@ -25,7 +25,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xsc-v9-OJt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2630" y="72"/>
+            <point key="canvasLocation" x="-2487" y="72"/>
         </scene>
         <!--List Of Playlists View Controller-->
         <scene sceneID="49a-m4-OmR">
@@ -185,7 +185,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="33d-Cz-71Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-599.20000000000005" y="1663.7181409295354"/>
+            <point key="canvasLocation" x="-767" y="1604"/>
         </scene>
         <!--MENU-->
         <scene sceneID="lP8-P7-sPd">
@@ -264,12 +264,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1fV-an-2Yo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1612" y="866.71664167916049"/>
+            <point key="canvasLocation" x="-1612" y="834"/>
         </scene>
-        <!--View Controller-->
+        <!--List Of Clubs View Controller-->
         <scene sceneID="QZ3-54-yRq">
             <objects>
-                <viewController id="eXj-41-x9Q" sceneMemberID="viewController">
+                <viewController id="eXj-41-x9Q" customClass="ListOfClubsViewController" customModule="MusicProject" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Phi-JP-jCp"/>
                         <viewControllerLayoutGuide type="bottom" id="lrg-yM-TR9"/>
@@ -321,21 +321,30 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="plk-Iy-2vY">
-                        <barButtonItem key="leftBarButtonItem" image="ic_backward" id="ROX-SZ-ctJ"/>
-                        <barButtonItem key="rightBarButtonItem" image="ic_share_all" id="htG-5G-q8o"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_backward" id="ROX-SZ-ctJ">
+                            <connections>
+                                <action selector="goBack:" destination="eXj-41-x9Q" id="gFI-Lg-cf4"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="ic_share_all" id="htG-5G-q8o">
+                            <connections>
+                                <action selector="share:" destination="eXj-41-x9Q" id="jYM-zd-9qT"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="clubsTable" destination="KWA-ea-d8W" id="e2p-cL-3y8"/>
                         <segue destination="OvS-Fv-r0F" kind="show" identifier="toClub" id="u5V-3J-Dti"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OQ8-Kq-5zI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2631.1999999999998" y="1663.7181409295354"/>
+            <point key="canvasLocation" x="-2487" y="1603"/>
         </scene>
-        <!--View Controller-->
+        <!--Club View Controller-->
         <scene sceneID="uKx-9Q-huw">
             <objects>
-                <viewController id="OvS-Fv-r0F" sceneMemberID="viewController">
+                <viewController id="OvS-Fv-r0F" customClass="ClubViewController" customModule="MusicProject" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="K3n-OB-S9s"/>
                         <viewControllerLayoutGuide type="bottom" id="Si2-aA-4Yi"/>
@@ -343,12 +352,112 @@
                     <view key="view" contentMode="scaleToFill" id="QDe-S9-u0f">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background_infopage" translatesAutoresizingMaskIntoConstraints="NO" id="2Ab-GE-k2w">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_clubs" translatesAutoresizingMaskIntoConstraints="NO" id="E8V-CZ-sLm">
+                                <rect key="frame" x="24" y="289" width="110" height="110"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jkd-3F-GEs">
+                                <rect key="frame" x="142" y="308" width="217" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOJ-UY-5cd">
+                                <rect key="frame" x="69" y="412" width="290" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGc-tc-NC9">
+                                <rect key="frame" x="69" y="441" width="290" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qz0-vz-J1g">
+                                <rect key="frame" x="69" y="470" width="290" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cc5-Dd-tym">
+                                <rect key="frame" x="69" y="499" width="290" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xsi-Sd-MUL">
+                                <rect key="frame" x="69" y="528" width="290" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_location" translatesAutoresizingMaskIntoConstraints="NO" id="2M9-Ic-KFl">
+                                <rect key="frame" x="30" y="410" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_people" translatesAutoresizingMaskIntoConstraints="NO" id="0VD-O9-8HK">
+                                <rect key="frame" x="30" y="439" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_web" translatesAutoresizingMaskIntoConstraints="NO" id="U9a-tA-y2f">
+                                <rect key="frame" x="30" y="468" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_inst" translatesAutoresizingMaskIntoConstraints="NO" id="wrM-rq-q9F">
+                                <rect key="frame" x="30" y="497" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DsK-52-Q2G">
+                                <rect key="frame" x="142" y="337" width="214" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_vk" translatesAutoresizingMaskIntoConstraints="NO" id="S09-cA-oie">
+                                <rect key="frame" x="30" y="526" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="4Zb-gH-yXn">
+                        <barButtonItem key="leftBarButtonItem" image="ic_backward" id="1z9-5Q-HeA">
+                            <connections>
+                                <action selector="goBack:" destination="OvS-Fv-r0F" id="y6Z-2s-eZV"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="ic_share_all" id="kEb-nC-smR">
+                            <connections>
+                                <action selector="share:" destination="OvS-Fv-r0F" id="mea-SJ-kAt"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="instagramLabel" destination="Cc5-Dd-tym" id="PrK-Pk-6Um"/>
+                        <outlet property="locationLabel" destination="yOJ-UY-5cd" id="nh3-kd-5Cf"/>
+                        <outlet property="memberLabel" destination="FGc-tc-NC9" id="dVF-td-xKy"/>
+                        <outlet property="nameLabel" destination="Jkd-3F-GEs" id="G57-GT-qlN"/>
+                        <outlet property="siteLabel" destination="qz0-vz-J1g" id="66I-B9-ZDS"/>
+                        <outlet property="vkLabel" destination="Xsi-Sd-MUL" id="bYq-HH-SRY"/>
+                        <outlet property="yearLabel" destination="DsK-52-Q2G" id="Ct6-nl-hrJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H4B-Hp-NhK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2631" y="2420"/>
+            <point key="canvasLocation" x="-2487.1999999999998" y="2371.6641679160421"/>
         </scene>
         <!--Donate View Controller-->
         <scene sceneID="SD2-b5-5c6">
@@ -454,7 +563,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AGG-9d-Pls" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1612" y="1663.7181409295354"/>
+            <point key="canvasLocation" x="-1612" y="1605"/>
         </scene>
         <!--Playlist View Controller-->
         <scene sceneID="q8f-bR-EGt">
@@ -538,7 +647,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DZi-CU-Nh0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="429.60000000000002" y="71.514242878560722"/>
+            <point key="canvasLocation" x="103" y="72"/>
         </scene>
         <!--Track View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -671,7 +780,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-599.20000000000005" y="71.514242878560722"/>
+            <point key="canvasLocation" x="-766" y="72"/>
         </scene>
     </scenes>
     <resources>
@@ -682,14 +791,20 @@
         <image name="default_album_v2" width="160" height="160"/>
         <image name="hilk" width="400" height="362"/>
         <image name="ic_backward" width="24" height="24"/>
+        <image name="ic_inst" width="24" height="24"/>
+        <image name="ic_location" width="24" height="24"/>
         <image name="ic_menu" width="24" height="24"/>
         <image name="ic_next" width="36" height="36"/>
+        <image name="ic_people" width="24" height="24"/>
         <image name="ic_play" width="36" height="36"/>
         <image name="ic_playlist_toolbar" width="24" height="24"/>
         <image name="ic_previous" width="36" height="36"/>
         <image name="ic_repeat_off" width="36" height="36"/>
         <image name="ic_save_off" width="36" height="36"/>
         <image name="ic_share_all" width="24" height="24"/>
+        <image name="ic_vk" width="24" height="24"/>
+        <image name="ic_web" width="24" height="24"/>
+        <image name="logo_clubs" width="160" height="160"/>
         <image name="rocket" width="96" height="161"/>
     </resources>
 </document>

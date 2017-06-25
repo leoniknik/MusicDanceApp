@@ -20,8 +20,9 @@
 		CA6ACF7E1EFFD35C000DA63C /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF7D1EFFD35C000DA63C /* ContactViewController.swift */; };
 		CA6ACF801EFFE87B000DA63C /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF7F1EFFE87B000DA63C /* DonateViewController.swift */; };
 		CA6ACF831EFFFEF4000DA63C /* ClubViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF821EFFFEF4000DA63C /* ClubViewCell.swift */; };
-		CA6ACF851EFFFFEC000DA63C /* ListsOfClubsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF841EFFFFEC000DA63C /* ListsOfClubsViewController.swift */; };
+		CA6ACF851EFFFFEC000DA63C /* ListOfClubsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF841EFFFFEC000DA63C /* ListOfClubsViewController.swift */; };
 		CA6ACF871F000005000DA63C /* ClubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF861F000005000DA63C /* ClubViewController.swift */; };
+		CA6ACF891F001304000DA63C /* Club.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6ACF881F001304000DA63C /* Club.swift */; };
 		CA96180C1EEC74F900B75202 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180B1EEC74F900B75202 /* APIManager.swift */; };
 		CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */; };
 		CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */; };
@@ -54,8 +55,9 @@
 		CA6ACF7D1EFFD35C000DA63C /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		CA6ACF7F1EFFE87B000DA63C /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		CA6ACF821EFFFEF4000DA63C /* ClubViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubViewCell.swift; sourceTree = "<group>"; };
-		CA6ACF841EFFFFEC000DA63C /* ListsOfClubsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListsOfClubsViewController.swift; sourceTree = "<group>"; };
+		CA6ACF841EFFFFEC000DA63C /* ListOfClubsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListOfClubsViewController.swift; sourceTree = "<group>"; };
 		CA6ACF861F000005000DA63C /* ClubViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClubViewController.swift; sourceTree = "<group>"; };
+		CA6ACF881F001304000DA63C /* Club.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Club.swift; sourceTree = "<group>"; };
 		CA96180B1EEC74F900B75202 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		CA96180D1EEC758E00B75202 /* ListOfPlaylistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListOfPlaylistsViewController.swift; sourceTree = "<group>"; };
 		CA96180F1EEC75B800B75202 /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 				CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */,
 				CA6ACF7D1EFFD35C000DA63C /* ContactViewController.swift */,
 				CA6ACF7F1EFFE87B000DA63C /* DonateViewController.swift */,
-				CA6ACF841EFFFFEC000DA63C /* ListsOfClubsViewController.swift */,
+				CA6ACF841EFFFFEC000DA63C /* ListOfClubsViewController.swift */,
 				CA6ACF861F000005000DA63C /* ClubViewController.swift */,
 			);
 			name = Controllers;
@@ -145,6 +147,7 @@
 			children = (
 				CA5E5B401EEC7D3E0049B210 /* Playlist.swift */,
 				CA5E5B421EEC7D530049B210 /* Song.swift */,
+				CA6ACF881F001304000DA63C /* Club.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -336,10 +339,11 @@
 				CA5E5B4A1EEC8DE90049B210 /* NotificationManager.swift in Sources */,
 				CA96180C1EEC74F900B75202 /* APIManager.swift in Sources */,
 				CA5E5B451EEC89140049B210 /* PlaylistTableViewCell.swift in Sources */,
-				CA6ACF851EFFFFEC000DA63C /* ListsOfClubsViewController.swift in Sources */,
+				CA6ACF851EFFFFEC000DA63C /* ListOfClubsViewController.swift in Sources */,
 				CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */,
 				CA3C313D1EFE9E3900552A1B /* SongManager.swift in Sources */,
 				CA6ACF7E1EFFD35C000DA63C /* ContactViewController.swift in Sources */,
+				CA6ACF891F001304000DA63C /* Club.swift in Sources */,
 				CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */,
 				CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */,
 				CAB245681EF9876C0033AEA8 /* UIImage+Color.swift in Sources */,

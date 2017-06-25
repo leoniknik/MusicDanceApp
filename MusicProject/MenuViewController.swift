@@ -107,8 +107,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         switch index {
         case 0: share(tableView: tableView, indexPath: indexPath)
         case 1: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-        case 2: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
-        case 3: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
+        case 2: favorites()
+        case 3: mark()
         case 4: self.performSegue(withIdentifier: SegueRouter.toDonate.rawValue, sender: nil)
         case 5: self.performSegue(withIdentifier: SegueRouter.toMail.rawValue, sender: nil)
         default: break
@@ -116,16 +116,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-//        if segue.identifier == SegueRouter.toAudioPlayer.rawValue {
-//            let destinationViewController = segue.destination as! TrackViewController
-//            destinationViewController.playlist = sender as? Playlist
-//            destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
-//        }
-        
-    }
     
     func share(tableView: UITableView, indexPath: IndexPath) {
         
@@ -141,6 +131,14 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 popView.sourceRect = tableView.cellForRow(at: indexPath)!.frame
             }
 
+    }
+    
+    func mark() {
+        
+    }
+    
+    func favorites() {
+        
     }
     
 }
