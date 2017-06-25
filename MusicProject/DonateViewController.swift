@@ -53,7 +53,6 @@ class DonateViewController: UIViewController {
         attributedLabel.textColor = UIColor.white
         
         //customize multiline text for navigationbar title
-        //let firstAttributes = []
         let firstLine = NSMutableAttributedString(string:"ДРУЗЬЯ, ПОЖАЛУЙСТА,\n", attributes:nil)
         let secondLine = NSAttributedString(string:"ПОДДЕРЖИТЕ НАШИ ПРОЕКТЫ!\n", attributes:nil)
         let thirdLine = NSAttributedString(string:"ВМЕСТЕ МЫ СДЕЛАЕМ МИР\n", attributes:nil)
