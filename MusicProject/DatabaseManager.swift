@@ -61,6 +61,9 @@ class DatabaseManager {
         return playlist.songs.filter(predicate).first
     }
     
+    class func removePlaylist(byID: Int) {
+        
+    }
     
     private class func save(object: Object) {
         

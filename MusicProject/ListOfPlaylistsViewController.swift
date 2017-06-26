@@ -25,7 +25,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         playlistsTable.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallback(_:)), name: .getPlaylistsCallback, object: nil)
         APIManager.getPlaylistsRequest()
-        //удалять тех которых нет
         
     }
     
@@ -89,9 +88,14 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     func getPlaylistsCallback(_ notification: NSNotification) {
         
         let data = notification.userInfo as! [String : JSON]
+        var IDs: [Int] = []
         let playlists = data["playlists"]!.arrayValue
         for playlist in playlists {
             DatabaseManager.setPlaylist(json: playlist)
+            IDs.append(playlist["id"].int!)
+        }
+        for ID in IDs {
+            DatabaseManager.removePlaylist(byID: ID)
         }
         self.playlistsTable.reloadData()
         

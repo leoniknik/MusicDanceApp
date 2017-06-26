@@ -59,14 +59,15 @@ class APIManager {
     }
     
     
-    class func getSongImage(song: Song) {
+    class func getSongImage(song: Song, position: Int) {
         
         let URL = "\(SERVER_IP)\(song.img_url)"
         let safeURL = URL.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
 
         Alamofire.request(safeURL).responseImage { response in
             if let image = response.result.value {
-                NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image" : image])
+                
+                NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image": image, "position": position])
             }
         }
         

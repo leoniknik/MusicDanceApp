@@ -12,6 +12,7 @@ import RealmSwift
 struct SongManager {
     static var backup: [Song] = []
     static var songs: [Song] = []
+    static var images: [UIImage] = []
     static var index: Int = 0
     
     static func getIndex() -> Int {
@@ -20,7 +21,7 @@ struct SongManager {
     }
     
     static func getPosition() -> Int {
-        let result = SongManager.songs[SongManager.getIndex()].position - 1
+        let result = SongManager.songs[SongManager.getIndex()].position
         return result
     }
     
@@ -72,4 +73,10 @@ struct SongManager {
         SongManager.songs = SongManager.backup
         SongManager.setIndex(bySongPosition: position)
     }
+    
+    static func getCurrentImage() -> UIImage? {
+        let position = getPosition() - 1
+        return images[position]
+    }
+    
 }

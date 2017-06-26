@@ -58,9 +58,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
  
         SongManager.setIndex(value: 0)
         createPlaylist()
-        //setupSong(position: Index.getIndex())
-        APIManager.getSongsRequest(playlist: playlist!)
         
+        APIManager.getSongsRequest(playlist: playlist!)
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
     }
@@ -72,6 +71,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
+        
+        setupSong(position: SongManager.getPosition())
         
     }
 
@@ -85,10 +86,12 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         let songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
         SongManager.songs.removeAll()
+        SongManager.images.removeAll()
         SongManager.setIndex(value: 0)
         for song in songs {
             jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
             SongManager.songs.append(song)
+            SongManager.images.append(UIImage(named: "default_album_v2")!)
         }
         SongManager.backup = SongManager.songs
     }
@@ -154,14 +157,14 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             //should pay next track or repeat
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
-                    let index = SongManager.getNextPosition()
-                    jukebox.play(atIndex: index)
+                    let position = SongManager.getNextPosition()
+                    jukebox.play(atIndex: position - 1)
+                    setupSong(position: position)
                 }
                 else {
                     jukebox.replayCurrentItem()
                 }
             }
-            
         } else {
             resetUI()
         }
@@ -246,18 +249,30 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             song = songByPosition
             titleLabel.text = song?.title
             singerLabel.text = song?.singer
-            APIManager.getSongImage(song: song!)
+            updateSongImage()
+            APIManager.getSongImage(song: song!, position: position)
         }
                 
     }
+    
+    func updateSongImage() {
+        if let image = SongManager.getCurrentImage() {
+            songImage.image = image
+        }
+        else {
+            songImage.image = UIImage(named: "default_album_v2")
+        }
+    }
+    
     
     func getSongImageCallback(_ notification: NSNotification) {
         
         let userInfo = notification.userInfo as! [String : Any]
         let image = userInfo["image"]
+        let position = userInfo["position"] as! Int - 1
         //проверка не поменялся ли трек
-        songImage.image = image as? UIImage
-        
+        SongManager.images[position] = image as? UIImage ?? UIImage(named: "default_album_v2")!
+        updateSongImage()
     }
     
     
@@ -278,10 +293,9 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBAction func nextSong(_ sender: Any) {
         
-        let index = SongManager.getNextPosition()
-        jukebox.play(atIndex: index)
-//        let posititon = jukebox.playIndex + 1
-//        setupSong(position: posititon)
+        let position = SongManager.getNextPosition()
+        jukebox.play(atIndex: position - 1)
+        setupSong(position: position)
         
     }
     
@@ -290,11 +304,9 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         if jukebox.playIndex == 0 {
             jukebox.replayCurrentItem()
         } else {
-            let index = SongManager.getPreviousPosition()
-            jukebox.play(atIndex: index)
-            
-//            let posititon = jukebox.playIndex - 1
-//            setupSong(position: posititon)
+            let position = SongManager.getPreviousPosition()
+            jukebox.play(atIndex: position - 1)
+            setupSong(position: position)
         }
         
     }
