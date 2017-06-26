@@ -94,9 +94,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             DatabaseManager.setPlaylist(json: playlist)
             IDs.append(playlist["id"].int!)
         }
-        for ID in IDs {
-            DatabaseManager.removePlaylist(byID: ID)
-        }
+        DatabaseManager.removePlaylists(IDs: IDs)
         self.playlistsTable.reloadData()
         
     }

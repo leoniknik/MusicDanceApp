@@ -61,7 +61,33 @@ class DatabaseManager {
         return playlist.songs.filter(predicate).first
     }
     
-    class func removePlaylist(byID: Int) {
+    class func removePlaylists(IDs: [Int]) {
+        
+        let playlists = realm.objects(Playlist.self)
+        for playlist in playlists {
+            let ID = playlist.id
+            if !(IDs.contains(ID))
+            {
+                try! realm.write {
+                    realm.delete(playlist)
+                }
+            }
+        }
+        
+    }
+    
+    class func removeSongs(IDs: [Int], playlist: Playlist) {
+        
+        let songs = playlist.songs
+        for song in songs {
+            let ID = song.id
+            if !(IDs.contains(ID))
+            {
+                try! realm.write {
+                    realm.delete(song)
+                }
+            }
+        }
         
     }
     

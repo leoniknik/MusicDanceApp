@@ -39,7 +39,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     var viewMode: TrackViewMode?
     var jukebox : Jukebox!
     var repeatState: RepeatState = .off
-
+    var tapGestureRecognizer: Any?
     
     enum RepeatState {
         case on
@@ -62,6 +62,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         APIManager.getSongsRequest(playlist: playlist!)
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
+        //initialization gesture recognizer
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
+        self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
+    
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,8 +76,9 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         
-        setupSong(position: SongManager.getPosition())
-        
+        if let position = SongManager.getPosition() {
+            setupSong(position: position)
+        }
     }
 
     
@@ -135,9 +140,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         songSlider.minimumTrackTintColor = UIColor.white
         songSlider.maximumTrackTintColor = UIColor.gray
         
-        //initialization gesture recognizer
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
-        self.songSlider.addGestureRecognizer(tapGestureRecognizer)
         
     }
     
@@ -157,9 +159,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             //should pay next track or repeat
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
-                    let position = SongManager.getNextPosition()
-                    jukebox.play(atIndex: position - 1)
-                    setupSong(position: position)
+                    if let position = SongManager.getNextPosition() {
+                        jukebox.play(atIndex: position - 1)
+                        setupSong(position: position)
+                    }
                 }
                 else {
                     jukebox.replayCurrentItem()
@@ -203,11 +206,13 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             case .remoteControlPause :
                 jukebox.pause()
             case .remoteControlNextTrack :
-                let index = SongManager.getNextPosition()
-                jukebox.play(atIndex: index)
+                if let index = SongManager.getNextPosition() {
+                    jukebox.play(atIndex: index)
+                }
             case .remoteControlPreviousTrack:
-                let index = SongManager.getPreviousPosition()
-                jukebox.play(atIndex: index)
+                if let index = SongManager.getPreviousPosition() {
+                    jukebox.play(atIndex: index)
+                }
             case .remoteControlTogglePlayPause:
                 if jukebox.state == .playing {
                     jukebox.pause()
@@ -232,12 +237,15 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     func getSongsCallback(_ notification: NSNotification) {
         
+        var IDs: [Int] = []
         let data = notification.userInfo as! [String : JSON]
         let songs = data["songs"]!.arrayValue
         for song in songs {
             DatabaseManager.setSong(json: song, playlist: playlist!)
+            IDs.append(song["id"].int!)
         }
-        //создать плейлист
+        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist!)
+        createPlaylist()
         setupSong(position: 1)
         
     }
@@ -293,9 +301,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBAction func nextSong(_ sender: Any) {
         
-        let position = SongManager.getNextPosition()
-        jukebox.play(atIndex: position - 1)
-        setupSong(position: position)
+        if let position = SongManager.getNextPosition() {
+            jukebox.play(atIndex: position - 1)
+            setupSong(position: position)
+        }
         
     }
     
@@ -304,9 +313,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         if jukebox.playIndex == 0 {
             jukebox.replayCurrentItem()
         } else {
-            let position = SongManager.getPreviousPosition()
-            jukebox.play(atIndex: position - 1)
-            setupSong(position: position)
+            if let position = SongManager.getPreviousPosition() {
+                jukebox.play(atIndex: position - 1)
+                setupSong(position: position)
+            }
         }
         
     }
@@ -328,10 +338,11 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBAction func songSliderValueChanged(_ sender: Any) {
         
+        self.songSlider.removeGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
         if let duration = jukebox.currentItem?.meta.duration {
             jukebox.seek(toSecond: Int(Double(songSlider.value) * duration))
         }
-        
+        self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
     }
     
     func resetUI() {
@@ -404,5 +415,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             }
         }
     }
+
     
 }

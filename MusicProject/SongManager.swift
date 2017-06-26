@@ -20,9 +20,14 @@ struct SongManager {
         return result
     }
     
-    static func getPosition() -> Int {
+    static func getPosition() -> Int? {
+        
+        if songs.isEmpty {
+            return nil
+        }
         let result = SongManager.songs[SongManager.getIndex()].position
         return result
+        
     }
     
     static func setIndex(value: Int) {
@@ -38,13 +43,13 @@ struct SongManager {
         }
     }
     
-    static func getNextPosition() -> Int {
+    static func getNextPosition() -> Int? {
         let index = getIndex() + 1
         setIndex(value: index)
         return getPosition()
     }
     
-    static func getPreviousPosition() -> Int {
+    static func getPreviousPosition() -> Int? {
         let index = getIndex() - 1
         setIndex(value: index)
         return getPosition()
@@ -75,8 +80,12 @@ struct SongManager {
     }
     
     static func getCurrentImage() -> UIImage? {
-        let position = getPosition() - 1
-        return images[position]
+        if let position = getPosition() {
+            return images[position - 1]
+        }
+        else {
+            return UIImage(named: "default_album_v2")
+        }
     }
     
 }
