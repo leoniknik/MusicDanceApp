@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         Realm.Configuration.defaultConfiguration = config
         
+        DatabaseManager.initSharedPlaylist()
+        
         return true
     }
 

@@ -91,6 +91,10 @@ class DatabaseManager {
         
     }
     
+    class func initSharedPlaylist() {
+        
+    }
+    
     private class func save(object: Object) {
         
         try! realm.write {

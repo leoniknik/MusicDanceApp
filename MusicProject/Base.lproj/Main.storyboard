@@ -744,6 +744,20 @@
                                     <action selector="downloadSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HJ8-x6-Vl3"/>
                                 </connections>
                             </button>
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rKT-8Y-h87">
+                                <rect key="frame" x="86" y="569" width="210" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="progressTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="trackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </progressView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Скачивание..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O7k-cy-nHF">
+                                <rect key="frame" x="16" y="540" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
@@ -764,12 +778,14 @@
                         <outlet property="backItem" destination="JCH-oc-eR7" id="0XV-Jp-KDp"/>
                         <outlet property="backgroundImage" destination="D7B-1F-Zli" id="gVe-0t-d57"/>
                         <outlet property="currentTimeLabel" destination="NOn-UF-MgH" id="THP-os-4iy"/>
+                        <outlet property="downdloadLabel" destination="O7k-cy-nHF" id="5q8-om-aUu"/>
                         <outlet property="downloadSongButton" destination="enL-Lc-6JT" id="bFb-UQ-RqO"/>
                         <outlet property="durationLabel" destination="wM3-Ix-WwA" id="dvZ-bG-PTm"/>
                         <outlet property="nextSongButton" destination="iyP-DC-Wia" id="89f-B8-Smc"/>
                         <outlet property="playOrPauseButton" destination="fZW-KB-Nw2" id="kxK-pL-KyT"/>
                         <outlet property="playlistItem" destination="fSV-k9-bmN" id="htM-ks-HnH"/>
                         <outlet property="previousSongButton" destination="K7p-J2-LfH" id="COc-MU-lCv"/>
+                        <outlet property="progressDownloadIndicator" destination="rKT-8Y-h87" id="ggO-EI-UZD"/>
                         <outlet property="repeatSongButton" destination="HGJ-15-0XW" id="IZZ-O1-E5a"/>
                         <outlet property="singerLabel" destination="hN7-GJ-c9k" id="1Bu-3j-iYv"/>
                         <outlet property="songImage" destination="vcb-HE-7dg" id="tXM-t8-axY"/>
@@ -780,7 +796,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-766" y="72"/>
+            <point key="canvasLocation" x="-767.20000000000005" y="71.514242878560722"/>
         </scene>
     </scenes>
     <resources>
