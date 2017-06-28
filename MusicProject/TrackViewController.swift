@@ -118,7 +118,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         let SERVER_IP = APIManager.getServerIP()
         
-        jukebox = Jukebox(delegate: self, items: [
+        self.jukebox = Jukebox(delegate: self, items: [
             ])!
         
         let songs: Results<Song>
@@ -130,13 +130,16 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         else {
             songs = DatabaseManager.getSavedSongs()
         }
-        
+        SongManager.songs.removeAll()
+        SongManager.images.removeAll()
         SongManager.setIndex(value: 0)
         for song in songs {
             jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
             SongManager.songs.append(song)
             SongManager.images.append(UIImage(named: "default_album_v2")!)
         }
+//        jukebox.play()
+//        jukebox.pause()
         SongManager.backup = SongManager.songs
     }
     
@@ -285,7 +288,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         var IDs: [Int] = []
         let data = notification.userInfo?["data"] as! [String : JSON]
         let songs = data["songs"]!.arrayValue
-//        let playlist = notification.userInfo?["playlist"] as! Playlist
+        //let playlist = notification.userInfo?["playlist"] as! Playlist
         print(playlist!)
         for song in songs {
             DatabaseManager.setSong(json: song, playlist: playlist!)
@@ -293,7 +296,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
         DatabaseManager.removeSongs(IDs: IDs, playlist: playlist!)
 //        if SongManager.songs.isEmpty {
-//            self.playlist = playlist
+        //    self.playlist = playlist
             createPlaylist()
             setupSong(position: 1)
 //        }
@@ -306,8 +309,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if let songByPosition = DatabaseManager.getSongByPosition(playlist: playlist!, position: position) {
             song = songByPosition
             print(song!)
-            titleLabel.text = song?.title
-            singerLabel.text = song?.singer
+            self.titleLabel.text = self.song!.title
+            self.singerLabel.text = self.song!.singer
             updateSongImage()
             APIManager.getSongImage(song: song!, position: position)
             populateLabelWithTime(durationLabel, time: Double(song!.length))
@@ -423,8 +426,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         jukebox.stop()
         Shuffle.setOffState()
         SongManager.normalizeSongs()
-        SongManager.songs.removeAll()
-        SongManager.images.removeAll()
+//        SongManager.songs.removeAll()
+//        SongManager.images.removeAll()
+
         //playlist = nil
     }
     
@@ -580,10 +584,10 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        stopDowload()
-        
-    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        stopDowload()
+//        
+//    }
     
     func startDownload(audioUrl: URL) {
         
