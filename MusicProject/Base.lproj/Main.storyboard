@@ -564,7 +564,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AGG-9d-Pls" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1612" y="1605"/>
+            <point key="canvasLocation" x="-1613" y="1704"/>
         </scene>
         <!--Playlist View Controller-->
         <scene sceneID="q8f-bR-EGt">
@@ -634,7 +634,7 @@
                                 <action selector="goBack:" destination="Nza-6u-L8d" id="0gU-Xm-wyW"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="utn-XZ-V39">
+                        <barButtonItem key="rightBarButtonItem" id="utn-XZ-V39">
                             <connections>
                                 <action selector="shuffle:" destination="Nza-6u-L8d" id="Wrf-Yc-LNf"/>
                             </connections>
@@ -763,7 +763,6 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="lhL-5R-AkH">
-                        <barButtonItem key="backBarButtonItem" title="ggg" id="sJu-Dg-0fq"/>
                         <barButtonItem key="leftBarButtonItem" image="ic_backward" id="JCH-oc-eR7">
                             <connections>
                                 <action selector="goBack:" destination="BYZ-38-t0r" id="5dp-ZU-iMA"/>
@@ -825,6 +824,6 @@
         <image name="rocket" width="96" height="161"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="N49-5U-qZp"/>
+        <segue reference="jXg-gi-yrZ"/>
     </inferredMetricsTieBreakers>
 </document>

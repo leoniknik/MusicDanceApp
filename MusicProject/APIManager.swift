@@ -40,21 +40,32 @@ class APIManager {
     
     class func getSongsRequest(playlist: Playlist) -> Void {
         
+        print(playlist)
+        
         let parameters: Parameters = [
             "screen" : "xhdpi",
             "playlist_id" : playlist.id
         ]
         
-        request(URL: GET_SONGS_URL, method: .get, parameters: parameters, onSuccess: getSongsOnSuccess, onError: defaultOnError)
+        
+        Alamofire.request(GET_SONGS_URL, method: .get, parameters: parameters ).validate().responseJSON { response in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                getSongsOnSuccess(json: json, playlist: playlist)
+            case .failure(let error):
+                defaultOnError(error: error)
+            }
+        }
         
     }
     
     
-    private class func getSongsOnSuccess(json: JSON) -> Void {
+    private class func getSongsOnSuccess(json: JSON, playlist: Playlist) -> Void {
         
         print(json)
         let data = json["response"].dictionaryValue
-        NotificationCenter.default.post(name: .getSongsCallback, object: nil, userInfo: data)
+        NotificationCenter.default.post(name: .getSongsCallback, object: nil, userInfo: ["data": data, "playlist": playlist])
         
     }
     

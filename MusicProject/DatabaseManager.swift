@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class DatabaseManager {
     
-    private static let realm = try! Realm()
+    private static var realm = try! Realm()
     
     class func setFlagOn(song: ThreadSafeReference<Song>) {
         
@@ -77,6 +77,16 @@ class DatabaseManager {
         song.singer = json["singer"].string!
         song.song_url = json["song_url"].string!
         song.title = json["title"].string!
+        
+        let id = song.id
+        let predicate = NSPredicate(format: "id == \(id)")
+        if let oldSong = realm.objects(Song.self).filter(predicate).first {
+            song.isSaved = oldSong.isSaved
+        }
+        else {
+            song.isSaved = false
+        }
+        
         song.playlist = playlist
         save(object: song)
         

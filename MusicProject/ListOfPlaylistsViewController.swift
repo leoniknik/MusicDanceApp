@@ -81,6 +81,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         let index = indexPath.row
         let playlist = playlists[index]
+        print(playlist.schoolName)
         self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
         
     }
@@ -104,7 +105,10 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         if segue.identifier == SegueRouter.toAudioPlayer.rawValue {
             let destinationViewController = segue.destination as! TrackViewController
-            destinationViewController.playlist = sender as? Playlist
+            let playlist = sender as? Playlist
+            print(playlist!)
+            destinationViewController.playlist = playlist
+            print(destinationViewController.playlist!)
             destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
         }
         

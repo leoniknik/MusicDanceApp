@@ -66,17 +66,21 @@ struct SongManager {
     
     static func shuffleSongs() {
         let index = SongManager.getIndex()
-        let position = songs[index].position
-        SongManager.backup = SongManager.songs
-        SongManager.songs.shuffle()
-        SongManager.setIndex(bySongPosition: position)
+        if !songs.isEmpty {
+            let position = songs[index].position
+            SongManager.backup = SongManager.songs
+            SongManager.songs.shuffle()
+            SongManager.setIndex(bySongPosition: position)
+        }
     }
     
     static func normalizeSongs() {
         let index = SongManager.getIndex()
-        let position = songs[index].position
-        SongManager.songs = SongManager.backup
-        SongManager.setIndex(bySongPosition: position)
+        if !songs.isEmpty {
+            let position = songs[index].position
+            SongManager.songs = SongManager.backup
+            SongManager.setIndex(bySongPosition: position)
+        }
     }
     
     static func getCurrentImage() -> UIImage? {
