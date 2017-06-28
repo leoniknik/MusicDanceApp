@@ -34,6 +34,14 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var downdloadLabel: UILabel!
     @IBOutlet weak var progressDownloadIndicator: UIProgressView!
     
+    //duration
+    //пустой плейлист (алерт)
+    //сохраненный плейлист
+    //реклама
+    //выкладывание
+    //игра в бекграунде
+    //icon
+    //разные экраны
     
     var playlist: Playlist?
     var song: Song?
@@ -42,6 +50,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     var repeatState: RepeatState = .off
     var tapGestureRecognizer: Any?
     var downloadTask: URLSessionDownloadTask?
+    var songRef: ThreadSafeReference<Song>?
     
     enum RepeatState {
         case on
@@ -59,7 +68,10 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
  
         SongManager.setIndex(value: 0)
         
-        APIManager.getSongsRequest(playlist: playlist!)
+        if viewMode == .fromListOfPlaylists {
+            APIManager.getSongsRequest(playlist: playlist!)
+        }
+        
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
         //initialization gesture recognizer
@@ -91,6 +103,10 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         //checkDownloadImage
         updateDownloadButton()
+        
+        if !SongManager.songs.isEmpty {
+            setupSong(position: SongManager.getPosition()!)
+        }
     }
 
     
@@ -101,7 +117,15 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         jukebox = Jukebox(delegate: self, items: [
             ])!
         
-        let songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
+        let songs: Results<Song>
+        
+        if viewMode == .fromListOfPlaylists {
+            songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
+        }
+        else {
+            songs = DatabaseManager.getSavedSongs()
+        }
+        
         SongManager.songs.removeAll()
         SongManager.images.removeAll()
         SongManager.setIndex(value: 0)
@@ -119,8 +143,13 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         resetUI()
         
         backgroundImage.addBlurEffect()
-        
-        let titlePlaylist = playlist!.schoolName
+        var titlePlaylist = ""
+        if viewMode == .fromListOfPlaylists {
+            titlePlaylist = playlist!.schoolName
+        }
+        else {
+            titlePlaylist = "SAVED SONGS"
+        }
         
         let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
         label.backgroundColor = UIColor.clear
@@ -440,7 +469,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if let audioUrl = URL(string: "\(SERVER_IP)\(song!.song_url)") {
             if let localUrl = getFileLocalPathByUrl(audioUrl) {
                 print("The file already exists at path: \(localUrl)")
-                removeSongFileLocally()
+                self.songRef = ThreadSafeReference(to: song!)
+                removeSongFileLocally(audioUrl)
                 removeFromLocalPlaylist()
             }
             else {
@@ -482,6 +512,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             DispatchQueue.main.async {
                 self.downdloadLabel.isHidden = true
                 self.progressDownloadIndicator.isHidden = true
+                self.progressDownloadIndicator.progress = 0.0
                 self.downloadSongButton.setImage(UIImage(named: "ic_save_on"), for: UIControlState())
             }
         }
@@ -514,7 +545,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                 do {
                     try data.write(to: destinationUrl, options: Data.WritingOptions.atomicWrite)
                     print("file saved at \(destinationUrl)")
-                    
+                    //set saved flag
+                    addToLocalPlaylist()
+                    downloadTask = nil
                 }
                 catch {
                     print(error)
@@ -532,12 +565,14 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func startDownload(audioUrl: URL) {
         
+        
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: nil)
         if downloadTask == nil {
             downloadTask = session.downloadTask(with: audioUrl)
             downdloadLabel.isHidden = false
             progressDownloadIndicator.isHidden = false
             downloadTask!.resume()
+            self.songRef = ThreadSafeReference(to: song!)
         }
         
     }
@@ -552,17 +587,39 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
     }
     
-    func removeSongFileLocally() {
+    func removeSongFileLocally(_ fileUrl: URL) {
         
+        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        // your destination file url
+        let fileName = fileUrl.lastPathComponent
+        // your destination file url
+        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
+        
+        if FileManager().fileExists(atPath: destinationUrl.path) {
+            
+            do {
+                try FileManager().removeItem(at: destinationUrl)
+            }
+            catch {
+                print(error)
+            }
+        }
         updateDownloadButton()
     }
     
     func addToLocalPlaylist() {
         
+        if let song = songRef {
+            DatabaseManager.setFlagOn(song: song)
+        }
+        
     }
     
     func removeFromLocalPlaylist() {
-        
+        if let song = songRef {
+            DatabaseManager.setFlagOff(song: song)
+        }
     }
     
     func updateDownloadButton () {

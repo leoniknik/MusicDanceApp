@@ -16,5 +16,6 @@ enum SegueRouter: String {
     case toDonate = "toDonate"
     case toMail = "toMail"
     case toClub = "toClub"
+    case fromMenuToTrack = "fromMenuToTrack"
     
 }

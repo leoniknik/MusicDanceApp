@@ -14,6 +14,45 @@ class DatabaseManager {
     
     private static let realm = try! Realm()
     
+    class func setFlagOn(song: ThreadSafeReference<Song>) {
+        
+        let realm = try! Realm()
+        guard let song = realm.resolve(song) else {
+            return
+        }
+        try! realm.write {
+            let id = song.id
+            let predicate = NSPredicate(format: "id == \(id)")
+            if let newSong = realm.objects(Song.self).filter(predicate).first {
+                newSong.isSaved = true
+                realm.add(newSong, update: true)
+            }
+        }
+        
+    }
+    
+    
+    class func setFlagOff(song: ThreadSafeReference<Song>) {
+        
+        let realm = try! Realm()
+        guard let song = realm.resolve(song) else {
+            return
+        }
+        try! realm.write {
+            let id = song.id
+            let predicate = NSPredicate(format: "id == \(id)")
+            if let newSong = realm.objects(Song.self).filter(predicate).first {
+                newSong.isSaved = false
+                realm.add(newSong, update: true)
+            }
+        }
+        
+    }
+    
+//    class func getSongById(id: Int) -> Song? {
+//        let predicate = NSPredicate(format: "id == \(id)")
+//        return realm.objects(Song.self).filter(predicate).first
+//    }
     
     class func setPlaylist(json: JSON) {
         
@@ -43,10 +82,10 @@ class DatabaseManager {
         
     }
     
-    
     class func getPlaylists() -> Results<Playlist> {
         
-        return realm.objects(Playlist.self).sorted(byKeyPath: "position")
+        let predicate = NSPredicate(format: "id != 1000")
+        return realm.objects(Playlist.self).sorted(byKeyPath: "position").filter(predicate)
         
     }
     
@@ -66,7 +105,7 @@ class DatabaseManager {
         let playlists = realm.objects(Playlist.self)
         for playlist in playlists {
             let ID = playlist.id
-            if !(IDs.contains(ID))
+            if !(IDs.contains(ID)) && ID != 1000
             {
                 try! realm.write {
                     realm.delete(playlist)
@@ -91,7 +130,10 @@ class DatabaseManager {
         
     }
     
-    class func initSharedPlaylist() {
+    class func getSavedSongs() -> Results<Song> {
+        
+        let predicate = NSPredicate(format: "isSaved == true")
+        return realm.objects(Song.self).filter(predicate)
         
     }
     

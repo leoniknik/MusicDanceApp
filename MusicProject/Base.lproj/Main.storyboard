@@ -260,6 +260,7 @@
                         <segue destination="VnV-TH-V6Z" kind="show" identifier="toDonate" id="iVN-RL-07t"/>
                         <segue destination="pok-u5-114" kind="show" identifier="toMail" id="NgW-Kb-oxq"/>
                         <segue destination="eXj-41-x9Q" kind="show" identifier="toDanceFamily" id="0eL-XO-KyO"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="fromMenuToTrack" id="N49-5U-qZp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1fV-an-2Yo" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -823,4 +824,7 @@
         <image name="logo_clubs" width="160" height="160"/>
         <image name="rocket" width="96" height="161"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="N49-5U-qZp"/>
+    </inferredMetricsTieBreakers>
 </document>
