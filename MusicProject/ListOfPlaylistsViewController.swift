@@ -24,6 +24,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         playlistsTable.delegate = self
         playlistsTable.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallback(_:)), name: .getPlaylistsCallback, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
         APIManager.getPlaylistsRequest()
         
     }
@@ -81,9 +82,24 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         let index = indexPath.row
         let playlist = playlists[index]
-        print(playlist.schoolName)
-        self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
+        if !playlist.songs.isEmpty {
+            self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
+        }
+        else {
+            APIManager.getSongsRequest(playlist: playlist)
+            showAlert()
+        }
+    }
+    
+    func showAlert() {
+        // create the alert
+        let alert = UIAlertController(title: "", message: "В плейлисте нет песен", preferredStyle: UIAlertControllerStyle.alert)
         
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
     }
     
     func getPlaylistsCallback(_ notification: NSNotification) {
@@ -97,7 +113,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         }
         DatabaseManager.removePlaylists(IDs: IDs)
         self.playlistsTable.reloadData()
-        
+        APIManager.hotLoad()
     }
     
     
@@ -112,6 +128,20 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
         }
         
+    }
+    
+    func getSongsCallback(_ notification: NSNotification) {
+        
+        var IDs: [Int] = []
+        let data = notification.userInfo?["data"] as! [String : JSON]
+        let songs = data["songs"]!.arrayValue
+        let playlist = notification.userInfo?["playlist"] as! Playlist
+//        print(playlist)
+        for song in songs {
+            DatabaseManager.setSong(json: song, playlist: playlist)
+            IDs.append(song["id"].int!)
+        }
+        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
     }
     
 }

@@ -90,6 +90,14 @@ class APIManager {
     }
     
     
+    class func hotLoad() {
+        let playlists = DatabaseManager.getPlaylists()
+        for playlist in playlists {
+            APIManager.getSongsRequest(playlist: playlist)
+        }
+    }
+    
+    
     private class func defaultOnSuccess(json: JSON) -> Void {
         
         print(json)

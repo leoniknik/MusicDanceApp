@@ -38,6 +38,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     //игра в бекграунде
     //icon 
     //разные экраны
+    //нет соединения с интернетом
     
     var playlist: Playlist?
     var song: Song?
@@ -59,16 +60,16 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         super.viewDidLoad()
         setupUI()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
         
  
         SongManager.setIndex(value: 0)
         
-        if viewMode == .fromListOfPlaylists {
-            print(playlist!)
-            APIManager.getSongsRequest(playlist: playlist!)
-        }
+//        if viewMode == .fromListOfPlaylists {
+//            print(playlist!)
+////          APIManager.getSongsRequest(playlist: playlist!)
+//        }
         
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
@@ -134,12 +135,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         SongManager.images.removeAll()
         SongManager.setIndex(value: 0)
         for song in songs {
-            jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: true)
+            jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
             SongManager.songs.append(song)
             SongManager.images.append(UIImage(named: "default_album_v2")!)
         }
-//        jukebox.play()
-//        jukebox.pause()
+
         SongManager.backup = SongManager.songs
     }
     
@@ -283,25 +283,25 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     }
     
     
-    func getSongsCallback(_ notification: NSNotification) {
-        
-        var IDs: [Int] = []
-        let data = notification.userInfo?["data"] as! [String : JSON]
-        let songs = data["songs"]!.arrayValue
-        //let playlist = notification.userInfo?["playlist"] as! Playlist
-        print(playlist!)
-        for song in songs {
-            DatabaseManager.setSong(json: song, playlist: playlist!)
-            IDs.append(song["id"].int!)
-        }
-        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist!)
-//        if SongManager.songs.isEmpty {
-        //    self.playlist = playlist
-            createPlaylist()
-            setupSong(position: 1)
+//    func getSongsCallback(_ notification: NSNotification) {
+//        
+//        var IDs: [Int] = []
+//        let data = notification.userInfo?["data"] as! [String : JSON]
+//        let songs = data["songs"]!.arrayValue
+//        let playlist = notification.userInfo?["playlist"] as! Playlist
+//        print(playlist)
+//        for song in songs {
+//            DatabaseManager.setSong(json: song, playlist: playlist)
+//            IDs.append(song["id"].int!)
 //        }
-        
-    }
+//        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
+//        if SongManager.songs.isEmpty {
+//           self.playlist = playlist
+//            createPlaylist()
+//            setupSong(position: 1)
+//        }
+//        
+//    }
 
     
     func setupSong(position: Int) {
@@ -309,13 +309,24 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if let songByPosition = DatabaseManager.getSongByPosition(playlist: playlist!, position: position) {
             song = songByPosition
             print(song!)
-            self.titleLabel.text = self.song!.title
-            self.singerLabel.text = self.song!.singer
+            
             updateSongImage()
             APIManager.getSongImage(song: song!, position: position)
-            populateLabelWithTime(durationLabel, time: Double(song!.length))
+            
+            updateUI()
         }
            
+    }
+    
+    func updateUI() {
+        if let song = song {
+            
+            DispatchQueue.main.async {
+                self.titleLabel.text = song.title
+                self.singerLabel.text = song.singer
+                self.populateLabelWithTime(self.durationLabel, time: Double(song.length))
+            }
+        }
     }
     
     func updateSongImage() {
@@ -369,14 +380,13 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     @IBAction func previousSong(_ sender: Any) {
         
-        if jukebox.playIndex == 0 {
-            jukebox.replayCurrentItem()
-        } else {
-            if let position = SongManager.getPreviousPosition() {
-                jukebox.play(atIndex: position - 1)
-                setupSong(position: position)
+        if let position = SongManager.getPreviousPosition() {
+            jukebox.play(atIndex: position - 1)
+            if position - 1 == 0 {
+                jukebox.replayCurrentItem()
             }
-        }
+            setupSong(position: position)
+            }
         stopDowload()
         updateDownloadButton()
     }
@@ -423,7 +433,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBAction func goBack(_ sender: Any) {
         
         self.navigationController?.popViewController(animated: true)
-        jukebox.stop()
+        DispatchQueue.main.async {
+            self.jukebox.stop()
+        }
         Shuffle.setOffState()
         SongManager.normalizeSongs()
 //        SongManager.songs.removeAll()
