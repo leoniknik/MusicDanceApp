@@ -27,6 +27,8 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
          NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
         APIManager.getPlaylistsRequest()
         
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +96,18 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     func showAlert() {
         // create the alert
         let alert = UIAlertController(title: "", message: "В плейлисте нет песен", preferredStyle: UIAlertControllerStyle.alert)
+        
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func showAlertPlaylistsEmpty() {
+        // create the alert
+        let alert = UIAlertController(title: "", message: "Список плейлистов пуст", preferredStyle: UIAlertControllerStyle.alert)
         
         // add an action (button)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))

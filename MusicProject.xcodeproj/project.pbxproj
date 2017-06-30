@@ -37,6 +37,7 @@
 		CAD0B8181EE482C000C8B2B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */; };
 		CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */; };
 		CAE70C101EF5B47C0069106E /* TrackViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */; };
+		CAEED8F61F06830F00D848F2 /* NetworkChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		CAD0B8191EE482C000C8B2B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackViewMode.swift; sourceTree = "<group>"; };
+		CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkChecker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */,
 				CA3C313C1EFE9E3900552A1B /* SongManager.swift */,
 				CA3C313E1EFECE1800552A1B /* ShuffleState.swift */,
+				CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				CA96180E1EEC758E00B75202 /* ListOfPlaylistsViewController.swift in Sources */,
 				CA3C313D1EFE9E3900552A1B /* SongManager.swift in Sources */,
 				CA6ACF7E1EFFD35C000DA63C /* ContactViewController.swift in Sources */,
+				CAEED8F61F06830F00D848F2 /* NetworkChecker.swift in Sources */,
 				CA6ACF891F001304000DA63C /* Club.swift in Sources */,
 				CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */,
 				CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */,
