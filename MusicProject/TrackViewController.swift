@@ -36,7 +36,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     //сохраненный плейлист
     //игра в бекграунде
-    //icon 
     //разные экраны
     
     var playlist: Playlist?
@@ -131,6 +130,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         SongManager.songs.removeAll()
         SongManager.images.removeAll()
         SongManager.setIndex(value: 0)
+        
         for song in songs {
             jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
             SongManager.songs.append(song)
@@ -144,8 +144,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     func setupUI() {
         
         resetUI()
-        
         backgroundImage.addBlurEffect()
+        
         var titlePlaylist = ""
         if viewMode == .fromListOfPlaylists {
             titlePlaylist = playlist!.schoolName
@@ -199,7 +199,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             populateLabelWithTime(currentTimeLabel, time: currentTime)
             populateLabelWithTime(durationLabel, time: duration)
             
-            //should pay next track or repeat
+            //should play next track or repeat
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
                     if let position = SongManager.getNextPosition() {
@@ -317,12 +317,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func updateUI() {
         if let song = song {
-            
-//            DispatchQueue.main.async {
-                self.titleLabel.text = song.title
-                self.singerLabel.text = song.singer
-                self.populateLabelWithTime(self.durationLabel, time: Double(song.length))
-//            }
+//          DispatchQueue.main.async {
+            self.titleLabel.text = song.title
+            self.singerLabel.text = song.singer
+            self.populateLabelWithTime(self.durationLabel, time: Double(song.length))
+//          }
         }
     }
     
@@ -492,17 +491,17 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         let SERVER_IP = APIManager.getServerIP()
         if let song = song {
-        if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
-            if let localUrl = getFileLocalPathByUrl(audioUrl) {
-                print("The file already exists at path: \(localUrl)")
-                //songRef = ThreadSafeReference(to: song)
-                removeSongFileLocally(audioUrl)
-                //removeFromLocalPlaylist()
+            songRef = ThreadSafeReference(to: song)
+            if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
+                if let localUrl = getFileLocalPathByUrl(audioUrl) {
+                    print("The file already exists at path: \(localUrl)")
+                    removeSongFileLocally(audioUrl)
+                    removeFromLocalPlaylist()
+                }
+                else {
+                    startDownload(audioUrl: audioUrl)
+                }
             }
-            else {
-                startDownload(audioUrl: audioUrl)
-            }
-        }
         }
     }
     
@@ -586,7 +585,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                     try data.write(to: destinationUrl, options: Data.WritingOptions.atomicWrite)
                     print("file saved at \(destinationUrl)")
                     //set saved flag
-                       // addToLocalPlaylist()
+                    addToLocalPlaylist()
 //                        downloadTask = nil
                 }
                 catch {
@@ -627,8 +626,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if downloadTask != nil{
             downloadTask!.cancel()
         }
-        self.backgroundSession.invalidateAndCancel()
-        
+        if let backgroundSession = backgroundSession {
+            backgroundSession.invalidateAndCancel()
+        }
     }
     
     func removeSongFileLocally(_ fileUrl: URL) {
