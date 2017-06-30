@@ -139,7 +139,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             print(playlist!)
             destinationViewController.playlist = playlist
             print(destinationViewController.playlist!)
-            destinationViewController.viewMode = TrackViewMode.fromListOfPlaylists
+            TrackViewMode.mode = .fromListOfPlaylists
         }
         
     }

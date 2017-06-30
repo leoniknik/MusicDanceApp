@@ -34,13 +34,14 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var downdloadLabel: UILabel!
     @IBOutlet weak var progressDownloadIndicator: UIProgressView!
     
-    //сохраненный плейлист
     //игра в бекграунде
+    //выкладывание
+    //воспроизведение локально
     //разные экраны
     
     var playlist: Playlist?
     var song: Song?
-    var viewMode: TrackViewMode?
+    //var viewMode: TrackViewMode?
     var jukebox : Jukebox!
     var repeatState: RepeatState = .off
     var tapGestureRecognizer: Any?
@@ -120,7 +121,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         let songs: Results<Song>
         
-        if viewMode == .fromListOfPlaylists {
+        if TrackViewMode.mode == .fromListOfPlaylists {
             print(playlist!)
             songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
         }
@@ -133,7 +134,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         for song in songs {
             jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
-            SongManager.songs.append(song)
+            SongManager.addSong(song: song)
             SongManager.images.append(UIImage(named: "default_album_v2")!)
         }
 
@@ -147,7 +148,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         backgroundImage.addBlurEffect()
         
         var titlePlaylist = ""
-        if viewMode == .fromListOfPlaylists {
+        if TrackViewMode.mode == .fromListOfPlaylists {
             titlePlaylist = playlist!.schoolName
         }
         else {
@@ -303,16 +304,27 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func setupSong(position: Int) {
         
-        if let songByPosition = DatabaseManager.getSongByPosition(playlist: playlist!, position: position) {
-            song = songByPosition
-            print(song!)
+        if TrackViewMode.mode == .fromListOfPlaylists {
+            if let songByPosition = DatabaseManager.getSongByPosition(playlist: playlist!, position: position) {
+                song = songByPosition
+                print(song!)
             
-            updateSongImage()
-            APIManager.getSongImage(song: song!, position: position)
+                updateSongImage()
+                APIManager.getSongImage(song: song!, position: position)
             
-            updateUI()
+                updateUI()
+            }
         }
-           
+        else {
+            if let songByPosition = SongManager.getSong(byPosition: position) {
+                song = songByPosition
+                print(song!)
+                updateSongImage()
+                APIManager.getSongImage(song: song!, position: position)
+                updateUI()
+            }
+        }
+
     }
     
     func updateUI() {

@@ -55,8 +55,14 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         songsTable.backgroundColor = .clear
         songsTable.separatorStyle = .none
         
+        var titlePlaylist = ""
         //multiline title
-        let titlePlaylist = playlist!.schoolName
+        if let playlist = playlist {
+            titlePlaylist = playlist.schoolName
+        }
+        else {
+            titlePlaylist = "SAVED SONGS"
+        }
         
         let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
         label.backgroundColor = UIColor.clear
@@ -119,8 +125,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             cell.duration.textColor = UIColor.white
         }
         cell.number.text = "\(index + 1)"
-        cell.name.text = SongManager.songs[index].title
-        let time = SongManager.songs[index].length
+        cell.name.text = SongManager.songs[index].song.title
+        let time = SongManager.songs[index].song.length
         let minutes = Int(time / 60)
         let seconds = Int(time) - minutes * 60
         cell.duration.text = String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
@@ -136,11 +142,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationController?.popViewController(animated: true)
         let previousController = self.navigationController?.topViewController as! TrackViewController
         let position = SongManager.songs[index].position
-        let juckboxItemPosition = position - 1
         SongManager.setIndex(bySongPosition: position)
+        let juckboxItemPosition = SongManager.songs[SongManager.getIndex()].position - 1
         previousController.jukebox.play(atIndex: juckboxItemPosition)
         //previousController.setupSong(position: songPosition)
-        
     }
     
     

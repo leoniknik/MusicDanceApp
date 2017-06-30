@@ -160,8 +160,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == SegueRouter.fromMenuToTrack.rawValue {
-            let destinationViewController = segue.destination as! TrackViewController
-            destinationViewController.viewMode = TrackViewMode.fromMenu
+            TrackViewMode.mode = .fromMenu
         }
         
     }

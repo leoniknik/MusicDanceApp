@@ -10,8 +10,21 @@ import Foundation
 import RealmSwift
 
 struct SongManager {
-    static var backup: [Song] = []
-    static var songs: [Song] = []
+    
+    struct SongWrapper {
+        
+        var song: Song!
+        var position: Int
+        
+        init (song: Song, position: Int) {
+            self.song = song
+            self.position = position
+        }
+
+    }
+    
+    static var backup: [SongWrapper] = []
+    static var songs: [SongWrapper] = []
     static var images: [UIImage] = []
     static var index: Int = 0
     
@@ -28,6 +41,17 @@ struct SongManager {
         let result = SongManager.songs[SongManager.getIndex()].position
         return result
         
+    }
+    
+    static func addSong(song: Song) {
+        if TrackViewMode.mode == .fromListOfPlaylists {
+            let songWrapper = SongWrapper(song: song, position: song.position)
+            self.songs.append(songWrapper)
+        }
+        else {
+            let songWrapper = SongWrapper(song: song, position: songs.count + 1)
+            self.songs.append(songWrapper)
+        }
     }
     
     static func setIndex(value: Int) {
@@ -90,6 +114,17 @@ struct SongManager {
         else {
             return UIImage(named: "default_album_v2")
         }
+    }
+    
+    static func getSong(byPosition position: Int) -> Song? {
+        
+        for song in songs {
+            if song.position == position {
+                return song.song
+            }
+        }
+        return nil
+        
     }
     
 }

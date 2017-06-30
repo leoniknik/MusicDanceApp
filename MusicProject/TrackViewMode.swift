@@ -8,9 +8,13 @@
 
 import Foundation
 
-enum TrackViewMode {
+class TrackViewMode {
     
-    case fromListOfPlaylists
-    case fromMenu
+    static var mode: Mode = .fromListOfPlaylists
+    
+    enum Mode {
+        case fromListOfPlaylists
+        case fromMenu
+    }
     
 }
