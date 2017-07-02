@@ -31,6 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         Realm.Configuration.defaultConfiguration = config
         
+        //music lock screen
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
         return true
     }
     

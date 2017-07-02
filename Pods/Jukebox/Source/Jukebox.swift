@@ -223,6 +223,9 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
     
     // MARK:- Properties -
     
+    var nowPlayingInfo: [String : AnyObject]?
+    var nowPlayingInfoCenter: MPNowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+    
     fileprivate var player                       :   AVPlayer?
     fileprivate var progressObserver             :   AnyObject!
     fileprivate var backgroundIdentifier         =   UIBackgroundTaskInvalid
@@ -314,8 +317,12 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
     
     // MARK: Playback
     
-    fileprivate func updateInfoCenter() {
-        guard let item = currentItem else {return}
+    public func updateInfoCenter() {
+        
+        guard let item = currentItem else {
+            self.configureNowPlayingInfo(nil)
+            return
+        }
         
         let title = (item.meta.title ?? item.localTitle) ?? item.URL.lastPathComponent
         let currentTime = item.currentTime ?? 0
@@ -323,28 +330,33 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
         let trackNumber = playIndex
         let trackCount = queuedItems.count
         
-        var nowPlayingInfo : [String : AnyObject] = [
-            MPMediaItemPropertyPlaybackDuration : duration as AnyObject,
-            MPMediaItemPropertyTitle : title as AnyObject,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime : currentTime as AnyObject,
-            MPNowPlayingInfoPropertyPlaybackQueueCount :trackCount as AnyObject,
-            MPNowPlayingInfoPropertyPlaybackQueueIndex : trackNumber as AnyObject,
-            MPMediaItemPropertyMediaType : MPMediaType.anyAudio.rawValue as AnyObject
-        ]
+        var nowPlayingInfo = [
+            MPMediaItemPropertyPlaybackDuration : duration,
+            MPMediaItemPropertyTitle : title,
+            //MPNowPlayingInfoPropertyElapsedPlaybackTime : currentTime as AnyObject,
+            MPNowPlayingInfoPropertyPlaybackRate: NSNumber(value: 1.0 as Float)] as [String : Any]
+//            MPNowPlayingInfoPropertyPlaybackQueueCount : trackCount,
+//            MPNowPlayingInfoPropertyPlaybackQueueIndex : trackNumber
+//           MPMediaItemPropertyMediaType : MPMediaType.anyAudio.rawValue
+//        ]
+
         
-        if let artist = item.meta.artist {
-            nowPlayingInfo[MPMediaItemPropertyArtist] = artist as AnyObject?
-        }
+//        if let artist = item.meta.artist {
+//            nowPlayingInfo[MPMediaItemPropertyArtist] = artist as AnyObject?
+//        }
+//        
+//        if let album = item.meta.album {
+//            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album as AnyObject?
+//        }
+//        
+//        if let img = currentItem?.meta.artwork {
+//            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: img)
+//        }
         
-        if let album = item.meta.album {
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album as AnyObject?
-        }
+        self.configureNowPlayingInfo(nowPlayingInfo as [String : AnyObject])
         
-        if let img = currentItem?.meta.artwork {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: img)
-        }
+        self.updateNowPlayingInfoElapsedTime()
         
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     fileprivate func playCurrentItem(withAsset asset: AVAsset) {
@@ -510,6 +522,25 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
     fileprivate func unregisterForPlayToEndNotification(withItem item : AVPlayerItem) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
     }
+    
+    
+    public func updateNowPlayingInfoElapsedTime() {
+        
+        guard var nowPlayingInfo = self.nowPlayingInfo, let currentTime = currentItem?.currentTime else { return }
+        
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime);
+        
+        self.configureNowPlayingInfo(nowPlayingInfo)
+        
+    }
+    
+    public func configureNowPlayingInfo(_ nowPlayingInfo: [String: AnyObject]?) {
+        
+        self.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        self.nowPlayingInfo = nowPlayingInfo
+        
+    }
+    
 }
 
 private extension Collection {

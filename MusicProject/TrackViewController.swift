@@ -70,7 +70,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
 //          APIManager.getSongsRequest(playlist: playlist!)
 //        }
         
-        UIApplication.shared.beginReceivingRemoteControlEvents()
 
         //initialization gesture recognizer
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
@@ -192,6 +191,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         print("Jukebox did load: \(item.URL.lastPathComponent)")
     }
     
+    
     func jukeboxPlaybackProgressDidChange(_ jukebox: Jukebox) {
         
         if let currentTime = jukebox.currentItem?.currentTime, let duration = jukebox.currentItem?.meta.duration {
@@ -200,7 +200,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             populateLabelWithTime(currentTimeLabel, time: currentTime)
             populateLabelWithTime(durationLabel, time: duration)
             
-            //should play next track or repeat
+//            jukebox.updateInfoCenter()
+//            jukebox.updateNowPlayingInfoElapsedTime()
+            
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
                     if let position = SongManager.getNextPosition() {
@@ -239,7 +241,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     }
     
     func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
-        //print("Item updated:\n\(forItem)")
+        
     }
     
     
@@ -252,13 +254,20 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             case .remoteControlPause :
                 jukebox.pause()
             case .remoteControlNextTrack :
-                if let index = SongManager.getNextPosition() {
-                    jukebox.play(atIndex: index)
+                if let position = SongManager.getNextPosition() {
+                    jukebox.play(atIndex: position - 1)
+                    setupSong(position: position)
                 }
+                updateDownloadButton()
             case .remoteControlPreviousTrack:
-                if let index = SongManager.getPreviousPosition() {
-                    jukebox.play(atIndex: index)
+                if let position = SongManager.getPreviousPosition() {
+                    jukebox.play(atIndex: position - 1)
+                    if position - 1 == 0 {
+                        jukebox.replayCurrentItem()
+                    }
+                    setupSong(position: position)
                 }
+                updateDownloadButton()
             case .remoteControlTogglePlayPause:
                 if jukebox.state == .playing {
                     jukebox.pause()
@@ -329,11 +338,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func updateUI() {
         if let song = song {
-//          DispatchQueue.main.async {
             self.titleLabel.text = song.title
             self.singerLabel.text = song.singer
             self.populateLabelWithTime(self.durationLabel, time: Double(song.length))
-//          }
         }
     }
     
