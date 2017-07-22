@@ -36,8 +36,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     //игра в бекграунде
     //выкладывание
-    //воспроизведение локально
     //разные экраны
+    //подсвет плейлистов
+    //API
     
     var playlist: Playlist?
     var song: Song?
@@ -121,7 +122,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         let songs: Results<Song>
         
         if TrackViewMode.mode == .fromListOfPlaylists {
-            print(playlist!)
             songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
         }
         else {
@@ -132,12 +132,25 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         SongManager.setIndex(value: 0)
         
         for song in songs {
-            jukebox.append(item: JukeboxItem (URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
+            
+            if TrackViewMode.mode == .fromListOfPlaylists {
+                jukebox.append(item: JukeboxItem(URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
+            }
+            else {
+                if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
+                    if let localUrl = getFileLocalPathByUrl(audioUrl) {
+                        jukebox.append(item: JukeboxItem(URL: localUrl), loadingAssets: false)
+                    }
+                }
+            }
             SongManager.addSong(song: song)
             SongManager.images.append(UIImage(named: "default_album_v2")!)
         }
 
         SongManager.backup = SongManager.songs
+        
+        //чтобы в самом начале был стоп в бэкграунде
+        
     }
     
     
@@ -524,6 +537,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
     }
     
+    
     func getFileLocalPathByUrl(_ fileUrl: URL) -> URL? {
         // create your document folder url
         let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -631,7 +645,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                 downdloadLabel.isHidden = false
                 progressDownloadIndicator.isHidden = false
                 downloadTask!.resume()
-                print(song!)
                 //songRef = ThreadSafeReference(to: song!)
         }
         
