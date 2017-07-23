@@ -300,7 +300,6 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
     
     func jukeboxItemDidUpdate(_ item: JukeboxItem) {
         guard let item = currentItem else {return}
-        //updateInfoCenter()
         self.delegate?.jukeboxDidUpdateMetadata(self, forItem: item)
     }
     
@@ -327,43 +326,41 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
         }
         
         let title = (item.meta.title ?? item.localTitle) ?? item.URL.lastPathComponent
-//        let currentTime = item.currentTime ?? 0
+        let currentTime = item.currentTime ?? 0
         let duration = item.meta.duration ?? 0
         
         if var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo {
             
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration as AnyObject
             nowPlayingInfo[MPMediaItemPropertyTitle] = title as AnyObject
-            //MPNowPlayingInfoPropertyElapsedPlaybackTime : currentTime as AnyObject,
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 1.0 as Float)
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
             
             self.configureNowPlayingInfo(nowPlayingInfo as [String : AnyObject])
-            //self.updateNowPlayingInfoElapsedTime()
             
         }
         else {
             let nowPlayingInfo = [
                 MPMediaItemPropertyPlaybackDuration : duration,
                 MPMediaItemPropertyTitle : title,
-                //MPNowPlayingInfoPropertyElapsedPlaybackTime : currentTime as AnyObject,
                 MPNowPlayingInfoPropertyPlaybackRate: NSNumber(value: 1.0 as Float)] as [String : Any]
             self.configureNowPlayingInfo(nowPlayingInfo as [String : AnyObject])
-            
-            //self.updateNowPlayingInfoElapsedTime()
         }
     }
     
     public func stopInfoCenter() {
         
-        guard currentItem != nil else {
+        guard let item = currentItem else {
             self.configureNowPlayingInfo(nil)
             return
         }
+        
+        let currentTime = item.currentTime ?? 0
+        
         if var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo {
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = NSNumber(value: 0.0 as Float)
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = NSNumber(value: currentTime)
             self.configureNowPlayingInfo(nowPlayingInfo as [String : AnyObject])
-            
-            //self.updateNowPlayingInfoElapsedTime()
         }
     }
     
@@ -407,7 +404,6 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
         player?.allowsExternalPlayback = false
         startProgressTimer()
         seek(toSecond: 0, shouldPlay: true)
-        updateInfoCenter()
     }
     
     // MARK: Items related

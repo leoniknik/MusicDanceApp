@@ -34,7 +34,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var downdloadLabel: UILabel!
     @IBOutlet weak var progressDownloadIndicator: UIProgressView!
     
-    //игра в бекграунде
     //выкладывание
     //разные экраны
     //подсвет плейлистов
@@ -42,7 +41,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     var playlist: Playlist?
     var song: Song?
-    //var viewMode: TrackViewMode?
     var jukebox : Jukebox!
     var repeatState: RepeatState = .off
     var tapGestureRecognizer: Any?
@@ -213,8 +211,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             populateLabelWithTime(currentTimeLabel, time: currentTime)
             populateLabelWithTime(durationLabel, time: duration)
             
-//            jukebox.updateInfoCenter()
-//            jukebox.updateNowPlayingInfoElapsedTime()
+            //updates infoCenter
+            jukebox.updateInfoCenter()
             
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
