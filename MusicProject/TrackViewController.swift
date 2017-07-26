@@ -36,7 +36,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     //выкладывание
     //разные экраны
-    //подсвет плейлистов
+    //оценка
     //API
     
     var playlist: Playlist?
