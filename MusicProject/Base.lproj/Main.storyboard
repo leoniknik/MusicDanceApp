@@ -86,6 +86,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="playlistImage" destination="64R-on-NPf" id="gR8-MT-Pgc"/>
+                                            <outlet property="playlistLabel" destination="RTg-0a-LfK" id="nRa-iw-zzV"/>
                                             <outlet property="schoolName" destination="JyL-jr-miv" id="jcD-4A-aK0"/>
                                         </connections>
                                     </tableViewCell>
@@ -985,6 +986,6 @@
         <image name="logo_clubs" width="160" height="160"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="N49-5U-qZp"/>
+        <segue reference="jXg-gi-yrZ"/>
     </inferredMetricsTieBreakers>
 </document>

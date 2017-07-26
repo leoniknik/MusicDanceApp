@@ -35,18 +35,20 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var progressDownloadIndicator: UIProgressView!
     
     //выкладывание
-    //разные экраны
     //подсвет плейлистов
+    //физ устройство
     //API
+    //оценить приложение
     
     var playlist: Playlist?
     var song: Song?
-    var jukebox : Jukebox!
     var repeatState: RepeatState = .off
     var tapGestureRecognizer: Any?
     var downloadTask: URLSessionDownloadTask?
     var songRef: ThreadSafeReference<Song>?
     var backgroundSession: URLSession!
+    var songManager: SongManager!
+    var jukebox: Jukebox!
     
     enum RepeatState {
         case on
@@ -57,26 +59,21 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         super.viewDidLoad()
         setupUI()
-        
-//        NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
-        
- 
-        SongManager.setIndex(value: 0)
-        
-//        if viewMode == .fromListOfPlaylists {
-//            print(playlist!)
-//          APIManager.getSongsRequest(playlist: playlist!)
-//        }
-        
 
+        songManager = SongManagerFactory.getSongManager()
+        jukebox = songManager.jukebox
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
+ 
+        songManager.setIndex(value: 0)
+        
         //initialization gesture recognizer
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
         self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
         
         createPlaylist()
         
-        if let position = SongManager.getPosition() {
+        if let position = songManager.getPosition() {
             setupSong(position: position)
         }
         
@@ -86,16 +83,13 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     override func viewWillAppear(_ animated: Bool) {
         
-//        super.viewWillAppear(animated)
-//        songImage.image = UIImage(named: "default_album_v2")
-        
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         
-        if let position = SongManager.getPosition() {
+        if let position = songManager.getPosition() {
             setupSong(position: position)
         }
         
@@ -105,7 +99,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
         //checkDownloadImage
         updateDownloadButton()
-
         
     }
 
@@ -125,9 +118,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         else {
             songs = DatabaseManager.getSavedSongs()
         }
-        SongManager.songs.removeAll()
-        SongManager.images.removeAll()
-        SongManager.setIndex(value: 0)
+        songManager.songs.removeAll()
+        songManager.images.removeAll()
+        songManager.setIndex(value: 0)
         
         for song in songs {
             
@@ -141,13 +134,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                     }
                 }
             }
-            SongManager.addSong(song: song)
-            SongManager.images.append(UIImage(named: "default_album_v2")!)
+            songManager.addSong(song: song)
+            songManager.images.append(UIImage(named: "default_album_v2")!)
         }
 
-        SongManager.backup = SongManager.songs
-        
-        //чтобы в самом начале был стоп в бэкграунде
+        songManager.backup = songManager.songs
         
     }
     
@@ -211,12 +202,12 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             populateLabelWithTime(currentTimeLabel, time: currentTime)
             populateLabelWithTime(durationLabel, time: duration)
             
-            //updates infoCenter
+            //update infoCenter
             jukebox.updateInfoCenter()
             
             if currentTimeLabel.text! == durationLabel.text! {
                 if repeatState == .off {
-                    if let position = SongManager.getNextPosition() {
+                    if let position = songManager.getNextPosition() {
                         jukebox.play(atIndex: position - 1)
                         setupSong(position: position)
                     }
@@ -262,28 +253,34 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             switch event!.subtype {
             case .remoteControlPlay :
                 jukebox.play()
+                SongManagerFactory.shouldColorPlaylist = true
             case .remoteControlPause :
                 jukebox.pause()
+                SongManagerFactory.shouldColorPlaylist = false
             case .remoteControlNextTrack :
-                if let position = SongManager.getNextPosition() {
+                if let position = songManager.getNextPosition() {
                     jukebox.play(atIndex: position - 1)
+                    SongManagerFactory.shouldColorPlaylist = true
                     setupSong(position: position)
                 }
                 updateDownloadButton()
             case .remoteControlPreviousTrack:
-                if let position = SongManager.getPreviousPosition() {
+                if let position = songManager.getPreviousPosition() {
                     jukebox.play(atIndex: position - 1)
                     if position - 1 == 0 {
                         jukebox.replayCurrentItem()
                     }
+                    SongManagerFactory.shouldColorPlaylist = true
                     setupSong(position: position)
                 }
                 updateDownloadButton()
             case .remoteControlTogglePlayPause:
                 if jukebox.state == .playing {
                     jukebox.pause()
+                    SongManagerFactory.shouldColorPlaylist = false
                 } else {
                     jukebox.play()
+                    SongManagerFactory.shouldColorPlaylist = true
                 }
             default:
                 break
@@ -294,32 +291,12 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     
     func populateLabelWithTime(_ label : UILabel, time: Double) {
+        
         let minutes = Int(time / 60)
         let seconds = Int(time) - minutes * 60
-        
         label.text = String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
+        
     }
-    
-    
-//    func getSongsCallback(_ notification: NSNotification) {
-//        
-//        var IDs: [Int] = []
-//        let data = notification.userInfo?["data"] as! [String : JSON]
-//        let songs = data["songs"]!.arrayValue
-//        let playlist = notification.userInfo?["playlist"] as! Playlist
-//        print(playlist)
-//        for song in songs {
-//            DatabaseManager.setSong(json: song, playlist: playlist)
-//            IDs.append(song["id"].int!)
-//        }
-//        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
-//        if SongManager.songs.isEmpty {
-//           self.playlist = playlist
-//            createPlaylist()
-//            setupSong(position: 1)
-//        }
-//        
-//    }
 
     
     func setupSong(position: Int) {
@@ -336,7 +313,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             }
         }
         else {
-            if let songByPosition = SongManager.getSong(byPosition: position) {
+            if let songByPosition = songManager.getSong(byPosition: position) {
                 song = songByPosition
                 print(song!)
                 updateSongImage()
@@ -356,12 +333,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     }
     
     func updateSongImage() {
-        if let image = SongManager.getCurrentImage() {
+        if let image = songManager.getCurrentImage() {
             songImage.image = image
         }
-//        else {
-//            songImage.image = UIImage(named: "default_album_v2")
-//        }
     }
     
     
@@ -370,44 +344,50 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         let userInfo = notification.userInfo as! [String : Any]
         let image = userInfo["image"]
         let position = userInfo["position"] as! Int - 1
-        //проверка не поменялся ли трек
-        SongManager.images[position] = image as? UIImage ?? UIImage(named: "default_album_v2")!
+        songManager.images[position] = image as? UIImage ?? UIImage(named: "default_album_v2")!
         updateSongImage()
     }
     
-    
+    //stop
     @IBAction func playOrPause(_ sender: Any) {
         
         switch jukebox.state {
         case .ready :
-            if let position = SongManager.getPosition() {
+            if let position = songManager.getPosition() {
                 jukebox.play(atIndex: position - 1)
+                SongManagerFactory.shouldColorPlaylist = true
                 setupSong(position: position)
             }
         case .playing :
             jukebox.pause()
+            SongManagerFactory.shouldColorPlaylist = false
         case .paused :
             jukebox.play()
+            SongManagerFactory.shouldColorPlaylist = true
         default:
             jukebox.stop()
+            SongManagerFactory.shouldColorPlaylist = false
         }
         
     }
     
     @IBAction func nextSong(_ sender: Any) {
         
-        if let position = SongManager.getNextPosition() {
+        if let position = songManager.getNextPosition() {
             jukebox.play(atIndex: position - 1)
+            SongManagerFactory.shouldColorPlaylist = true
             setupSong(position: position)
         }
         stopDowload()
         updateDownloadButton()
+        
     }
     
     @IBAction func previousSong(_ sender: Any) {
         
-        if let position = SongManager.getPreviousPosition() {
+        if let position = songManager.getPreviousPosition() {
             jukebox.play(atIndex: position - 1)
+            SongManagerFactory.shouldColorPlaylist = true
             if position - 1 == 0 {
                 jukebox.replayCurrentItem()
             }
@@ -415,6 +395,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             }
         stopDowload()
         updateDownloadButton()
+        
     }
     
     @IBAction func repeatSong(_ sender: Any) {
@@ -459,16 +440,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBAction func goBack(_ sender: Any) {
         
         self.navigationController?.popViewController(animated: true)
-//        DispatchQueue.main.async {
-            self.jukebox.stop()
-//        }
-        Shuffle.setOffState()
-        SongManager.normalizeSongs()
+//        self.jukebox.stop()
+//        Shuffle.setOffState()
+//        SongManager.normalizeSongs()
         stopDowload()
-//        SongManager.songs.removeAll()
-//        SongManager.images.removeAll()
 
-        //playlist = nil
     }
     
     
@@ -477,7 +453,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if segue.identifier == SegueRouter.toPlaylist.rawValue {
             let destinationViewController = segue.destination as! PlaylistViewController
             destinationViewController.playlist = sender as? Playlist
-//            destinationViewController.position = jukebox.playIndex
             destinationViewController.jukebox = jukebox
         }
         
@@ -629,10 +604,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
     }
     
-//    override func viewDidDisappear(_ animated: Bool) {
-//        stopDowload()
-//        
-//    }
     
     func startDownload(audioUrl: URL) {
         

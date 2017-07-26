@@ -72,6 +72,7 @@ extension Jukebox {
             preloadNextAndPrevious(atIndex: playIndex)
         }
         updateInfoCenter()
+
     }
     
     /**
@@ -82,6 +83,7 @@ extension Jukebox {
         player?.pause()
         state = .paused
         stopInfoCenter()
+        
     }
     
     /**
@@ -93,6 +95,7 @@ extension Jukebox {
         UIApplication.shared.endBackgroundTask(backgroundIdentifier)
         backgroundIdentifier = UIBackgroundTaskInvalid
         stopInfoCenter()
+        
     }
     
     /**
@@ -189,6 +192,7 @@ extension Jukebox {
             queuedItems.remove(at: index)
         }
     }
+    
 }
 
 

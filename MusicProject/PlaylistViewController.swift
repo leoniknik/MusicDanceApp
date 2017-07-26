@@ -18,11 +18,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     var playlist: Playlist?
     var jukebox: Jukebox!
-    
+    var songManager: SongManager!
 
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        songManager = SongManagerFactory.getSongManager()
         songsTable.dataSource = self
         songsTable.delegate = self
         songsTable.separatorStyle = .none
@@ -105,7 +106,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return SongManager.songs.count
+        return songManager.songs.count
         
     }
     
@@ -114,7 +115,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cell = songsTable.dequeueReusableCell(withIdentifier: "SongViewCell") as! SongViewCell
         let index = indexPath.row
-        if index == SongManager.getIndex() {
+        if index == songManager.getIndex() {
             cell.number.textColor = UIColor.red
             cell.name.textColor = UIColor.red
             cell.duration.textColor = UIColor.red
@@ -125,8 +126,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             cell.duration.textColor = UIColor.white
         }
         cell.number.text = "\(index + 1)"
-        cell.name.text = SongManager.songs[index].song.title
-        let time = SongManager.songs[index].song.length
+        cell.name.text = songManager.songs[index].song.title
+        let time = songManager.songs[index].song.length
         let minutes = Int(time / 60)
         let seconds = Int(time) - minutes * 60
         cell.duration.text = String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
@@ -141,23 +142,25 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         let index = indexPath.row
         self.navigationController?.popViewController(animated: true)
         let previousController = self.navigationController?.topViewController as! TrackViewController
-        let position = SongManager.songs[index].position
-        SongManager.setIndex(bySongPosition: position)
-        let juckboxItemPosition = SongManager.songs[SongManager.getIndex()].position - 1
+        let position = songManager.songs[index].position
+        songManager.setIndex(bySongPosition: position)
+        let juckboxItemPosition = songManager.songs[songManager.getIndex()].position - 1
         previousController.jukebox.play(atIndex: juckboxItemPosition)
+        SongManagerFactory.shouldColorPlaylist = true
         //previousController.setupSong(position: songPosition)
+        
     }
     
     
     @IBAction func shuffle(_ sender: Any) {
         if Shuffle.getState() == .off {
-            SongManager.shuffleSongs()
+            songManager.shuffleSongs()
             Shuffle.switchState()
             shuffleItem.image = UIImage(named: "ic_shuffle_on")
         }
         else {
             Shuffle.switchState()
-            SongManager.normalizeSongs()
+            songManager.normalizeSongs()
             shuffleItem.image = UIImage(named: "ic_shuffle_off")
         }
         songsTable.reloadData()

@@ -27,8 +27,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
          NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
         APIManager.getPlaylistsRequest()
         
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -37,6 +35,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         navigationController?.navigationBar.barTintColor = UIColor.black
         navigationController?.navigationBar.setBackgroundImage(UIImage(color: UIColor.black), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
+        playlistsTable.reloadData()
         
     }
     
@@ -59,8 +58,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         label.attributedText = firstLine
         self.navigationItem.titleView = label
         
-        //disable some scrolling 
-        
     }
     
     
@@ -74,6 +71,9 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         let cell = playlistsTable.dequeueReusableCell(withIdentifier: "PlaylistTableViewCell") as! PlaylistTableViewCell
         let index = indexPath.row
+        if SongManagerFactory.numberColoredPlaylist == index && SongManagerFactory.shouldColorPlaylist {
+            cell.playlistLabel.textColor = UIColor.red
+        }
         cell.schoolName.text = playlists[index].schoolName
         cell.playlistImage.image = UIImage(named: "p_\(index % 17 + 1)")
         return cell
@@ -86,34 +86,40 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         let playlist = playlists[index]
         if !playlist.songs.isEmpty {
             self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
+            
+            if SongManagerFactory.numberColoredPlaylist != index {
+//                Shuffle.setOffState()
+//                SongManager.normalizeSongs()
+                SongManagerFactory.numberColoredPlaylist = index
+                SongManagerFactory.isSamePlaylist = false
+            }
+            else {
+                SongManagerFactory.isSamePlaylist = true
+            }
+            
         }
         else {
             APIManager.getSongsRequest(playlist: playlist)
             showAlert()
         }
+        
     }
     
     func showAlert() {
-        // create the alert
+
         let alert = UIAlertController(title: "", message: "В плейлисте нет песен", preferredStyle: UIAlertControllerStyle.alert)
-        
-        // add an action (button)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-        
-        // show the alert
         self.present(alert, animated: true, completion: nil)
+        
     }
     
     
     func showAlertPlaylistsEmpty() {
-        // create the alert
+
         let alert = UIAlertController(title: "", message: "Список плейлистов пуст", preferredStyle: UIAlertControllerStyle.alert)
-        
-        // add an action (button)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-        
-        // show the alert
         self.present(alert, animated: true, completion: nil)
+        
     }
     
     func getPlaylistsCallback(_ notification: NSNotification) {
@@ -128,6 +134,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         DatabaseManager.removePlaylists(IDs: IDs)
         self.playlistsTable.reloadData()
         APIManager.hotLoad()
+        
     }
     
     
@@ -136,10 +143,13 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         if segue.identifier == SegueRouter.toAudioPlayer.rawValue {
             let destinationViewController = segue.destination as! TrackViewController
             let playlist = sender as? Playlist
-            print(playlist!)
             destinationViewController.playlist = playlist
-            print(destinationViewController.playlist!)
             TrackViewMode.mode = .fromListOfPlaylists
+            
+            if SongManagerFactory.isSamePlaylist {
+               // destinationViewController.jukebox.
+            }
+            
         }
         
     }
@@ -150,7 +160,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         let data = notification.userInfo?["data"] as! [String : JSON]
         let songs = data["songs"]!.arrayValue
         let playlist = notification.userInfo?["playlist"] as! Playlist
-//        print(playlist)
         for song in songs {
             DatabaseManager.setSong(json: song, playlist: playlist)
             IDs.append(song["id"].int!)
