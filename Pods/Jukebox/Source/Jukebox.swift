@@ -24,7 +24,6 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
-
 // MARK: - Custom types -
 
 public protocol JukeboxDelegate: class {
@@ -72,6 +71,7 @@ extension Jukebox {
             preloadNextAndPrevious(atIndex: playIndex)
         }
         updateInfoCenter()
+
     }
     
     /**
@@ -82,6 +82,7 @@ extension Jukebox {
         player?.pause()
         state = .paused
         stopInfoCenter()
+        
     }
     
     /**
@@ -93,6 +94,7 @@ extension Jukebox {
         UIApplication.shared.endBackgroundTask(backgroundIdentifier)
         backgroundIdentifier = UIBackgroundTaskInvalid
         stopInfoCenter()
+        
     }
     
     /**
@@ -189,6 +191,7 @@ extension Jukebox {
             queuedItems.remove(at: index)
         }
     }
+    
 }
 
 
@@ -231,7 +234,8 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
     fileprivate var player                       :   AVPlayer?
     fileprivate var progressObserver             :   AnyObject!
     fileprivate var backgroundIdentifier         =   UIBackgroundTaskInvalid
-    fileprivate(set) open weak var delegate    :   JukeboxDelegate?
+    //fileprivate(set) open weak var delegate    :   JukeboxDelegate?
+                       open weak var delegate    :   JukeboxDelegate?
     
     fileprivate (set) open var playIndex       =   0
     fileprivate (set) open var queuedItems     :   [JukeboxItem]!
@@ -508,7 +512,9 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
         if playIndex >= queuedItems.count - 1 {
             stop()
         } else {
-            play(atIndex: playIndex + 1)
+//            NotificationCenter.default.post(.playNextSong)
+//            NotificationCenter.default.post(name: .playNextSong, object: nil, userInfo: nil)
+            //play(atIndex: playIndex + 1)
         }
     }
     
