@@ -74,6 +74,9 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         if SongManagerFactory.numberColoredPlaylist == index && SongManagerFactory.shouldColorPlaylist {
             cell.playlistLabel.textColor = UIColor.red
         }
+        else {
+            cell.playlistLabel.textColor = UIColor.white
+        }
         cell.schoolName.text = playlists[index].schoolName
         cell.playlistImage.image = UIImage(named: "p_\(index % 17 + 1)")
         return cell
@@ -88,9 +91,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
             
             if SongManagerFactory.numberColoredPlaylist != index {
-//                Shuffle.setOffState()
-//                SongManager.normalizeSongs()
-                SongManagerFactory.numberColoredPlaylist = index
                 SongManagerFactory.isSamePlaylist = false
             }
             else {
@@ -145,10 +145,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             let playlist = sender as? Playlist
             destinationViewController.playlist = playlist
             TrackViewMode.mode = .fromListOfPlaylists
-            
-            if SongManagerFactory.isSamePlaylist {
-               // destinationViewController.jukebox.
-            }
             
         }
         

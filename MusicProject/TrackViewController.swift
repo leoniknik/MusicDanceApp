@@ -35,43 +35,49 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var progressDownloadIndicator: UIProgressView!
     
     //выкладывание
-    //подсвет плейлистов
     //физ устройство
     //API
     //оценить приложение
     
     var playlist: Playlist?
     var song: Song?
-    var repeatState: RepeatState = .off
     var tapGestureRecognizer: Any?
     var downloadTask: URLSessionDownloadTask?
     var songRef: ThreadSafeReference<Song>?
     var backgroundSession: URLSession!
     var songManager: SongManager!
-    var jukebox: Jukebox!
-    
-    enum RepeatState {
-        case on
-        case off
-    }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        setupUI()
-
+        
         songManager = SongManagerFactory.getSongManager()
-        jukebox = songManager.jukebox
+        setupRepeat()
+        setupUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
- 
-        songManager.setIndex(value: 0)
         
         //initialization gesture recognizer
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
         self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
         
-        createPlaylist()
+        if TrackViewMode.mode != .fromListOfPlaylists || !SongManagerFactory.isSamePlaylist {
+            createPlaylist()
+            //songManager.setIndex(value: 0)
+        }
+        else {
+            if let currentTime = songManager.jukebox.currentItem?.currentTime, let duration = songManager.jukebox.currentItem?.meta.duration {
+                let value = Float(currentTime / duration)
+                songSlider.value = value
+                populateLabelWithTime(currentTimeLabel, time: currentTime)
+                populateLabelWithTime(durationLabel, time: duration)
+            }
+        }
+        
+        if SongManagerFactory.isSamePlaylist {
+            songManager.jukebox.delegate = self
+            setupPlayOrPauseButton(songManager.jukebox)
+        }
         
         if let position = songManager.getPosition() {
             setupSong(position: position)
@@ -100,14 +106,26 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         //checkDownloadImage
         updateDownloadButton()
         
+        if SongManagerFactory.isSamePlaylist {
+            songManager.jukebox.delegate = self
+            setupPlayOrPauseButton(songManager.jukebox)
+        }
+
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        if SongManagerFactory.isSamePlaylist {
+            songManager.jukebox.delegate = songManager
+        }
+        
+    }
     
     func createPlaylist() {
         
         let SERVER_IP = APIManager.getServerIP()
         
-        jukebox = Jukebox(delegate: self, items: [
+        songManager.jukebox = Jukebox(delegate: self, items: [
             ])!
         
         let songs: Results<Song>
@@ -125,12 +143,12 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         for song in songs {
             
             if TrackViewMode.mode == .fromListOfPlaylists {
-                jukebox.append(item: JukeboxItem(URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
+                songManager.jukebox.append(item: JukeboxItem(URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
             }
             else {
                 if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
                     if let localUrl = getFileLocalPathByUrl(audioUrl) {
-                        jukebox.append(item: JukeboxItem(URL: localUrl), loadingAssets: false)
+                        songManager.jukebox.append(item: JukeboxItem(URL: localUrl), loadingAssets: false)
                     }
                 }
             }
@@ -142,6 +160,14 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         
     }
     
+    func setupRepeat() {
+        switch SongManagerFactory.repeatState {
+        case .on:
+            repeatSongButton.setImage(UIImage(named: "ic_repeat_on"), for: UIControlState())
+        case .off:
+            repeatSongButton.setImage(UIImage(named: "ic_repeat_off"), for: UIControlState())
+        }
+    }
     
     func setupUI() {
         
@@ -205,8 +231,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             //update infoCenter
             jukebox.updateInfoCenter()
             
-            if currentTimeLabel.text! == durationLabel.text! {
-                if repeatState == .off {
+            if currentTimeLabel.text == durationLabel.text {
+                if SongManagerFactory.repeatState == .off {
+                    
                     if let position = songManager.getNextPosition() {
                         jukebox.play(atIndex: position - 1)
                         setupSong(position: position)
@@ -225,6 +252,16 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func jukeboxStateDidChange(_ jukebox: Jukebox) {
         
+        setupPlayOrPauseButton(jukebox)
+        print("Jukebox state changed to \(jukebox.state)")
+        
+    }
+    
+    func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
+        
+    }
+    
+    func setupPlayOrPauseButton(_ jukebox: Jukebox) {
         if jukebox.state == .ready {
             playOrPauseButton.setImage(UIImage(named: "ic_play"), for: UIControlState())
         } else if jukebox.state == .loading  {
@@ -239,48 +276,72 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             }
             playOrPauseButton.setImage(UIImage(named: imageName), for: UIControlState())
         }
-        print("Jukebox state changed to \(jukebox.state)")
     }
-    
-    func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
-        
-    }
-    
     
     override func remoteControlReceived(with event: UIEvent?) {
         
         if event?.type == .remoteControl {
             switch event!.subtype {
             case .remoteControlPlay :
-                jukebox.play()
+                
+                if !SongManagerFactory.isSamePlaylist {
+                    SongManagerFactory.copyJukebox()
+                    songManager = SongManagerFactory.getSongManager()
+                }
+                
+                songManager.jukebox.play()
                 SongManagerFactory.shouldColorPlaylist = true
+                SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
             case .remoteControlPause :
-                jukebox.pause()
+                songManager.jukebox.pause()
                 SongManagerFactory.shouldColorPlaylist = false
+                //SongManagerFactory.numberColoredPlaylist = -1
             case .remoteControlNextTrack :
                 if let position = songManager.getNextPosition() {
-                    jukebox.play(atIndex: position - 1)
+                    
+                    if !SongManagerFactory.isSamePlaylist {
+                        SongManagerFactory.copyJukebox()
+                        songManager = SongManagerFactory.getSongManager()
+                    }
+                    
+                    songManager.jukebox.play(atIndex: position - 1)
                     SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                     setupSong(position: position)
                 }
                 updateDownloadButton()
             case .remoteControlPreviousTrack:
+                
+                if !SongManagerFactory.isSamePlaylist {
+                    SongManagerFactory.copyJukebox()
+                    songManager = SongManagerFactory.getSongManager()
+                }
+                
                 if let position = songManager.getPreviousPosition() {
-                    jukebox.play(atIndex: position - 1)
+                    songManager.jukebox.play(atIndex: position - 1)
                     if position - 1 == 0 {
-                        jukebox.replayCurrentItem()
+                        songManager.jukebox.replayCurrentItem()
                     }
                     SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                     setupSong(position: position)
                 }
                 updateDownloadButton()
             case .remoteControlTogglePlayPause:
-                if jukebox.state == .playing {
-                    jukebox.pause()
+                if songManager.jukebox.state == .playing {
+                    songManager.jukebox.pause()
                     SongManagerFactory.shouldColorPlaylist = false
+                    //SongManagerFactory.numberColoredPlaylist = -1
                 } else {
-                    jukebox.play()
+                    
+                    if !SongManagerFactory.isSamePlaylist {
+                        SongManagerFactory.copyJukebox()
+                        songManager = SongManagerFactory.getSongManager()
+                    }
+                    
+                    songManager.jukebox.play()
                     SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                 }
             default:
                 break
@@ -348,36 +409,64 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         updateSongImage()
     }
     
-    //stop
+
     @IBAction func playOrPause(_ sender: Any) {
         
-        switch jukebox.state {
+        switch songManager.jukebox.state {
         case .ready :
             if let position = songManager.getPosition() {
-                jukebox.play(atIndex: position - 1)
+                
+                if !SongManagerFactory.isSamePlaylist {
+                    SongManagerFactory.copyJukebox()
+                    songManager = SongManagerFactory.getSongManager()
+                }
+                
+                songManager.jukebox.play(atIndex: position - 1)
                 SongManagerFactory.shouldColorPlaylist = true
+                SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                 setupSong(position: position)
+
             }
         case .playing :
-            jukebox.pause()
+            songManager.jukebox.pause()
             SongManagerFactory.shouldColorPlaylist = false
+            //SongManagerFactory.numberColoredPlaylist = -1
         case .paused :
-            jukebox.play()
+            
+            if !SongManagerFactory.isSamePlaylist {
+                SongManagerFactory.copyJukebox()
+                songManager = SongManagerFactory.getSongManager()
+            }
+            
+            songManager.jukebox.play()
             SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
         default:
-            jukebox.stop()
+            songManager.jukebox.stop()
             SongManagerFactory.shouldColorPlaylist = false
+            //SongManagerFactory.numberColoredPlaylist = -1
         }
         
     }
     
     @IBAction func nextSong(_ sender: Any) {
         
-        if let position = songManager.getNextPosition() {
-            jukebox.play(atIndex: position - 1)
-            SongManagerFactory.shouldColorPlaylist = true
-            setupSong(position: position)
+        if !SongManagerFactory.isSamePlaylist {
+            SongManagerFactory.copyJukebox()
+            songManager = SongManagerFactory.getSongManager()
+            print(songManager.name)
         }
+        
+        if let position = songManager.getNextPosition() {
+
+            songManager.jukebox.play(atIndex: position - 1)
+            resetUI()
+            SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
+            setupSong(position: position)
+            
+        }
+        
         stopDowload()
         updateDownloadButton()
         
@@ -385,11 +474,18 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     @IBAction func previousSong(_ sender: Any) {
         
+        resetUI()
+        if !SongManagerFactory.isSamePlaylist {
+            SongManagerFactory.copyJukebox()
+            songManager = SongManagerFactory.getSongManager()
+        }
+        
         if let position = songManager.getPreviousPosition() {
-            jukebox.play(atIndex: position - 1)
+            songManager.jukebox.play(atIndex: position - 1)
             SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
             if position - 1 == 0 {
-                jukebox.replayCurrentItem()
+                songManager.jukebox.replayCurrentItem()
             }
             setupSong(position: position)
             }
@@ -399,12 +495,12 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     }
     
     @IBAction func repeatSong(_ sender: Any) {
-        switch repeatState {
+        switch SongManagerFactory.repeatState {
         case .off:
-            repeatState = .on
+            SongManagerFactory.repeatState = .on
             repeatSongButton.setImage(UIImage(named: "ic_repeat_on"), for: UIControlState())
         case .on:
-            repeatState = .off
+            SongManagerFactory.repeatState = .off
             repeatSongButton.setImage(UIImage(named: "ic_repeat_off"), for: UIControlState())
         }
     }
@@ -414,8 +510,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBAction func songSliderValueChanged(_ sender: Any) {
         
         self.songSlider.removeGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
-        if let duration = jukebox.currentItem?.meta.duration {
-            jukebox.seek(toSecond: Int(Double(songSlider.value) * duration))
+        if let duration = songManager.jukebox.currentItem?.meta.duration {
+            songManager.jukebox.seek(toSecond: Int(Double(songSlider.value) * duration))
         }
         self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
     }
@@ -440,9 +536,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBAction func goBack(_ sender: Any) {
         
         self.navigationController?.popViewController(animated: true)
-//        self.jukebox.stop()
-//        Shuffle.setOffState()
-//        SongManager.normalizeSongs()
         stopDowload()
 
     }
@@ -453,7 +546,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if segue.identifier == SegueRouter.toPlaylist.rawValue {
             let destinationViewController = segue.destination as! PlaylistViewController
             destinationViewController.playlist = sender as? Playlist
-            destinationViewController.jukebox = jukebox
+            destinationViewController.jukebox = songManager.jukebox
         }
         
     }
@@ -466,26 +559,35 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         let widthOfSlider: CGFloat = songSlider.frame.size.width
         let newValue = ((pointTapped.x - positionOfSlider.x) * CGFloat(songSlider.maximumValue) / widthOfSlider)
         
-        if jukebox.state == .playing {
-            jukebox.pause()
-            if let duration = jukebox.currentItem?.meta.duration {
-                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+        if !SongManagerFactory.isSamePlaylist {
+            SongManagerFactory.copyJukebox()
+            songManager = SongManagerFactory.getSongManager()
+        }
+        
+        if songManager.jukebox.state == .playing {
+            songManager.jukebox.pause()
+            if let duration = songManager.jukebox.currentItem?.meta.duration {
+                songManager.jukebox.seek(toSecond: Int(Double(newValue) * duration))
                 songSlider.setValue(Float(newValue), animated: true)
                 populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
             }
-            jukebox.play()
+            songManager.jukebox.play()
+            SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
         }
-        else if jukebox.state == .ready {
-            jukebox.play()
-            if let duration = jukebox.currentItem?.meta.duration {
-                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+        else if songManager.jukebox.state == .ready {
+            songManager.jukebox.play()
+            SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
+            if let duration = songManager.jukebox.currentItem?.meta.duration {
+                songManager.jukebox.seek(toSecond: Int(Double(newValue) * duration))
                 songSlider.setValue(Float(newValue), animated: true)
                 populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
             }
         }
         else {
-            if let duration = jukebox.currentItem?.meta.duration {
-                jukebox.seek(toSecond: Int(Double(newValue) * duration))
+            if let duration = songManager.jukebox.currentItem?.meta.duration {
+                songManager.jukebox.seek(toSecond: Int(Double(newValue) * duration))
                 songSlider.setValue(Float(newValue), animated: true)
                 populateLabelWithTime(currentTimeLabel, time: Double(newValue) * duration)
             }
@@ -513,7 +615,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func getFileLocalPathByUrl(_ fileUrl: URL) -> URL? {
         // create your document folder url
-        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         // your destination file url
         let fileName = fileUrl.lastPathComponent
@@ -580,7 +682,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     func storeFileLocally(remoteFileUrl: NSURL, _ data: Data?) {
         // create your document folder url
-        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
         // your destination file url
         if let fileName = remoteFileUrl.lastPathComponent {
@@ -592,7 +694,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                     print("file saved at \(destinationUrl)")
                     //set saved flag
                     addToLocalPlaylist()
-//                        downloadTask = nil
                 }
                 catch {
                     print(error)
@@ -624,12 +725,13 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         self.downdloadLabel.isHidden = true
         self.progressDownloadIndicator.isHidden = true
         self.progressDownloadIndicator.progress = 0.0
-        if downloadTask != nil{
+        if downloadTask != nil {
             downloadTask!.cancel()
         }
         if let backgroundSession = backgroundSession {
             backgroundSession.invalidateAndCancel()
         }
+        
     }
     
     func removeSongFileLocally(_ fileUrl: URL) {

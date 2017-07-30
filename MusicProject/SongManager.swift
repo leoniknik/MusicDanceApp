@@ -17,10 +17,17 @@ class SongManagerFactory {
     //for colored playlist
     static var shouldColorPlaylist: Bool = false
     //number of playlist
-    static var numberColoredPlaylist: Int = 0
+    static var numberColoredPlaylist: Int = -1
     
-    static var actualSongManager = SongManager()
-    static var newSongManager = SongManager()
+    static var repeatState: RepeatState = .off
+    
+    enum RepeatState {
+        case on
+        case off
+    }
+    
+    static var actualSongManager = SongManager(name: "actual")
+    static var newSongManager = SongManager(name: "new")
     
     static func getSongManager() -> SongManager {
         if isSamePlaylist {
@@ -31,9 +38,22 @@ class SongManagerFactory {
         }
     }
     
+    static func copyJukebox() {
+        isSamePlaylist = true
+        if let jukebox = actualSongManager.jukebox {
+            jukebox.stop()
+        }
+        actualSongManager.jukebox = newSongManager.jukebox
+        actualSongManager.backup = newSongManager.backup
+        actualSongManager.songs = newSongManager.songs
+        actualSongManager.index = newSongManager.index
+        actualSongManager.images = newSongManager.images
+        actualSongManager.shuffleState = newSongManager.shuffleState
+        
+    }
 }
 
-class SongManager {
+class SongManager: JukeboxDelegate {
     
     class SongWrapper {
         
@@ -53,6 +73,17 @@ class SongManager {
     var songs: [SongWrapper] = []
     var images: [UIImage] = []
     var index: Int = 0
+    var name = ""
+    var shuffleState: ShuffleState = .off
+    
+    enum ShuffleState {
+        case on
+        case off
+    }
+    
+    init(name: String) {
+        self.name = name
+    }
     
     func getIndex() -> Int {
         return index
@@ -90,6 +121,7 @@ class SongManager {
         else {
             index = value
         }
+        
     }
     
     func getNextPosition() -> Int? {
@@ -151,5 +183,46 @@ class SongManager {
         return nil
         
     }
+    
+    func getTime(time: Double) -> String {
+        let minutes = Int(time / 60)
+        let seconds = Int(time) - minutes * 60
+        return String(format: "%02d", minutes) + ":" + String(format: "%02d", seconds)
+    }
+    
+    //MARK: Jukebox delegate
+    
+    func jukeboxStateDidChange(_ jukebox: Jukebox) {
+        
+    }
+    
+    func jukeboxPlaybackProgressDidChange(_ jukebox: Jukebox) {
+        if let currentTime = jukebox.currentItem?.currentTime, let duration = jukebox.currentItem?.meta.duration {
+            
+            //update infoCenter
+            jukebox.updateInfoCenter()
+            
+            if getTime(time: currentTime) == getTime(time: duration) {
+                if SongManagerFactory.repeatState == .off {
+                    
+                    if let position = self.getNextPosition() {
+                        jukebox.play(atIndex: position - 1)
+                        //перерисовываем экран списка песен в плейлисте
+                        NotificationCenter.default.post(name: .playNextSong, object: nil)
+                    }
+                }
+                else {
+                    jukebox.replayCurrentItem()
+                }
+            }
+        }
+    }
 
+    func jukeboxDidLoadItem(_ jukebox: Jukebox, item: JukeboxItem) {
+        
+    }
+    
+    func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
+        
+    }
 }

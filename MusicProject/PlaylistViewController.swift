@@ -24,10 +24,13 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         super.viewDidLoad()
         songManager = SongManagerFactory.getSongManager()
+        
         songsTable.dataSource = self
         songsTable.delegate = self
         songsTable.separatorStyle = .none
         setupUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUI(_:)), name: .playNextSong, object: nil)
         
     }
     
@@ -83,11 +86,16 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         self.navigationItem.titleView = label
         
         //baritem
-        if Shuffle.getState() == .off {
-            shuffleItem.image = UIImage(named: "ic_shuffle_off")
+        if SongManagerFactory.isSamePlaylist {
+            if songManager.shuffleState == .off {
+                shuffleItem.image = UIImage(named: "ic_shuffle_off")
+            }
+            else {
+                shuffleItem.image = UIImage(named: "ic_shuffle_on")
+            }
         }
         else {
-            shuffleItem.image = UIImage(named: "ic_shuffle_on")
+            shuffleItem.image = UIImage(named: "ic_shuffle_off")
         }
 
     }
@@ -145,26 +153,36 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         let position = songManager.songs[index].position
         songManager.setIndex(bySongPosition: position)
         let juckboxItemPosition = songManager.songs[songManager.getIndex()].position - 1
-        previousController.jukebox.play(atIndex: juckboxItemPosition)
+        previousController.resetUI()
+
+        if !SongManagerFactory.isSamePlaylist {
+            SongManagerFactory.copyJukebox()
+        }
+        
+        previousController.songManager = SongManagerFactory.getSongManager()
+
+        previousController.songManager.jukebox.play(atIndex: juckboxItemPosition)
         SongManagerFactory.shouldColorPlaylist = true
-        //previousController.setupSong(position: songPosition)
+        SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
         
     }
     
     
     @IBAction func shuffle(_ sender: Any) {
-        if Shuffle.getState() == .off {
+        if songManager.shuffleState == .off {
             songManager.shuffleSongs()
-            Shuffle.switchState()
+            songManager.shuffleState = .on
             shuffleItem.image = UIImage(named: "ic_shuffle_on")
         }
         else {
-            Shuffle.switchState()
+            songManager.shuffleState = .off
             songManager.normalizeSongs()
             shuffleItem.image = UIImage(named: "ic_shuffle_off")
         }
         songsTable.reloadData()
     }
     
-    
+    func updateUI(_ notification: NSNotification) {
+        songsTable.reloadData()
+    }
 }

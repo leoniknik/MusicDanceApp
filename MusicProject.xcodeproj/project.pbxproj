@@ -10,7 +10,6 @@
 		C1CC77BC77D13FC3567B4661 /* Pods_MusicProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 429EBA15504B5A86481FC475 /* Pods_MusicProject.framework */; };
 		CA396E811EF420DF00DF24EA /* SegueRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA396E801EF420DF00DF24EA /* SegueRouter.swift */; };
 		CA3C313D1EFE9E3900552A1B /* SongManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3C313C1EFE9E3900552A1B /* SongManager.swift */; };
-		CA3C313F1EFECE1800552A1B /* ShuffleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3C313E1EFECE1800552A1B /* ShuffleState.swift */; };
 		CA3C31411EFEDA0F00552A1B /* UIImageView+Blur.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3C31401EFEDA0F00552A1B /* UIImageView+Blur.swift */; };
 		CA5E5B411EEC7D3E0049B210 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B401EEC7D3E0049B210 /* Playlist.swift */; };
 		CA5E5B431EEC7D530049B210 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5E5B421EEC7D530049B210 /* Song.swift */; };
@@ -46,7 +45,6 @@
 		9DC2A7EE25B2EE4BCEB03104 /* Pods-MusicProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicProject.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicProject/Pods-MusicProject.release.xcconfig"; sourceTree = "<group>"; };
 		CA396E801EF420DF00DF24EA /* SegueRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueRouter.swift; sourceTree = "<group>"; };
 		CA3C313C1EFE9E3900552A1B /* SongManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongManager.swift; sourceTree = "<group>"; };
-		CA3C313E1EFECE1800552A1B /* ShuffleState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShuffleState.swift; sourceTree = "<group>"; };
 		CA3C31401EFEDA0F00552A1B /* UIImageView+Blur.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Blur.swift"; sourceTree = "<group>"; };
 		CA5E5B401EEC7D3E0049B210 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		CA5E5B421EEC7D530049B210 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 				CA396E801EF420DF00DF24EA /* SegueRouter.swift */,
 				CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */,
 				CA3C313C1EFE9E3900552A1B /* SongManager.swift */,
-				CA3C313E1EFECE1800552A1B /* ShuffleState.swift */,
 				CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */,
 			);
 			name = Helpers;
@@ -337,7 +334,6 @@
 			files = (
 				CA5E5B431EEC7D530049B210 /* Song.swift in Sources */,
 				CA9618101EEC75B800B75202 /* PlaylistViewController.swift in Sources */,
-				CA3C313F1EFECE1800552A1B /* ShuffleState.swift in Sources */,
 				CA6ACF871F000005000DA63C /* ClubViewController.swift in Sources */,
 				CA5E5B4A1EEC8DE90049B210 /* NotificationManager.swift in Sources */,
 				CA96180C1EEC74F900B75202 /* APIManager.swift in Sources */,
