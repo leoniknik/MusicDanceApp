@@ -41,6 +41,9 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     
     func setupUI() {
         
+        //make black background
+        playlistsTable.backgroundColor = UIColor.black
+        
         let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
         label.backgroundColor = UIColor.clear
         label.numberOfLines = 2

@@ -17,12 +17,17 @@ class APIManager {
     private static let SERVER_IP = "http://188.166.211.232"
 //    private static let SERVER_IP = "http://192.168.1.44:8000"
 
-    private static let GET_PLAYLISTS_URL = "\(SERVER_IP)/musicapi/getplaylists"
-    private static let GET_SONGS_URL = "\(SERVER_IP)/musicapi/getsongs"
+    private static let GET_PLAYLISTS_URL = "\(SERVER_IP)/musicapi/v2/getplaylists"
+    private static let GET_SONGS_URL = "\(SERVER_IP)/musicapi/v2/getsongs"
+    
+    private static var getSongParameter = "free"
     
     class func getPlaylistsRequest() -> Void {
         
-        let parameters: Parameters = [:]
+        let parameters: Parameters = [
+            "os" : "ios",
+            "v"  : "2"
+        ]
         
         request(URL: GET_PLAYLISTS_URL, method: .get, parameters: parameters, onSuccess: getPlaylistsOnSuccess, onError: defaultOnError)
         
@@ -33,6 +38,7 @@ class APIManager {
         
         print(json)
         let data = json["response"].dictionaryValue
+        getSongParameter = data["sounds"]!.string!
         NotificationCenter.default.post(name: .getPlaylistsCallback, object: nil, userInfo: data)
         
     }
@@ -44,6 +50,7 @@ class APIManager {
         
         let parameters: Parameters = [
             "screen" : "xhdpi",
+            "sounds" : getSongParameter,
             "playlist_id" : playlist.id
         ]
         

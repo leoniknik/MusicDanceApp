@@ -141,9 +141,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         songManager.setIndex(value: 0)
         
         for song in songs {
-            
+            let songURL = URL(string: "\(SERVER_IP)\(song.song_url)")
+            print(song.song_url)
+            print(songURL)
             if TrackViewMode.mode == .fromListOfPlaylists {
-                songManager.jukebox.append(item: JukeboxItem(URL: URL(string: "\(SERVER_IP)\(song.song_url)")!), loadingAssets: false)
+                songManager.jukebox.append(item: JukeboxItem(URL: songURL!), loadingAssets: false)
             }
             else {
                 if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
