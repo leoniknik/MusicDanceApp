@@ -134,7 +134,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func mark() {
-        
+        let url = URL(string: "http://itunes.apple.com/app/id1265946456")!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     
     func favorites() {

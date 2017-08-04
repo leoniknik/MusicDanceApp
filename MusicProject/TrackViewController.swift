@@ -36,7 +36,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     
     //выкладывание
     //физ устройство
-    //API
     //оценить приложение
     
     var playlist: Playlist?
@@ -141,11 +140,11 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         songManager.setIndex(value: 0)
         
         for song in songs {
-            let songURL = URL(string: "\(SERVER_IP)\(song.song_url)")
-            print(song.song_url)
-            print(songURL)
+            var urlString = "\(SERVER_IP)\(song.song_url)"
+            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+            let url = URL(string : urlString)!
             if TrackViewMode.mode == .fromListOfPlaylists {
-                songManager.jukebox.append(item: JukeboxItem(URL: songURL!), loadingAssets: false)
+                songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
             }
             else {
                 if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
