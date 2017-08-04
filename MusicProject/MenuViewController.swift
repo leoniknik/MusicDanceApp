@@ -27,7 +27,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         Menu(image: UIImage(named: "ic_share_all")!, title: "Рассказать друзьям"),
         Menu(image: UIImage(named: "ic_info_menu")!, title: "Dance Family"),
         Menu(image: UIImage(named: "ic_save_on")!, title: "Сохраненные аудиозаписи"),
-        Menu(image: UIImage(named: "ic_rating_menu")!, title: "Оценить приложение"),
+        Menu(image: UIImage(named: "ic_like_menu")!, title: "Оценить приложение"),
         Menu(image: UIImage(named: "ic_money_menu")!, title: "Поддержать проект"),
         Menu(image: UIImage(named: "ic_email_menu")!, title: "Написать разработчикам")
     ]
@@ -166,6 +166,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if segue.identifier == SegueRouter.fromMenuToTrack.rawValue {
             TrackViewMode.mode = .fromMenu
+            let playlist = Playlist()
+            playlist.position = -1
+            let destinationController = segue.destination as! TrackViewController
+            destinationController.playlist = playlist
+            if SongManagerFactory.numberColoredPlaylist == -2 {
+                SongManagerFactory.isSamePlaylist = true
+            }
+            else {
+                SongManagerFactory.isSamePlaylist = false
+            }
         }
         
     }

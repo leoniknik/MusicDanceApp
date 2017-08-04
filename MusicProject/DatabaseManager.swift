@@ -49,10 +49,22 @@ class DatabaseManager {
         
     }
     
-//    class func getSongById(id: Int) -> Song? {
-//        let predicate = NSPredicate(format: "id == \(id)")
-//        return realm.objects(Song.self).filter(predicate).first
-//    }
+    
+    class func setFlagOff(song: Song){
+        try! realm.write {
+            song.isSaved = false
+            
+        }
+        save(object: song)
+    }
+    
+    class func setFlagOn(song: Song){
+        try! realm.write {
+            song.isSaved = true
+        }
+        save(object: song)
+    }
+    
     
     class func setPlaylist(json: JSON) {
         

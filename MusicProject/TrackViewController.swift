@@ -12,7 +12,7 @@ import SwiftyJSON
 import MediaPlayer
 import Jukebox
 
-class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownloadDelegate {
+class TrackViewController: UIViewController, JukeboxDelegate {
 
     @IBOutlet weak var singerLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -24,26 +24,19 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBOutlet weak var playOrPauseButton: UIButton!
     @IBOutlet weak var nextSongButton: UIButton!
     @IBOutlet weak var previousSongButton: UIButton!
-    @IBOutlet weak var downloadSongButton: UIButton!
+    @IBOutlet weak var markSongButton: UIButton!
     @IBOutlet weak var repeatSongButton: UIButton!
     
     @IBOutlet weak var playlistItem: UIBarButtonItem!
     @IBOutlet weak var backItem: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    @IBOutlet weak var downdloadLabel: UILabel!
-    @IBOutlet weak var progressDownloadIndicator: UIProgressView!
-    
-    //выкладывание
-    //физ устройство
-    //оценить приложение
-    
     var playlist: Playlist?
     var song: Song?
     var tapGestureRecognizer: Any?
-    var downloadTask: URLSessionDownloadTask?
+    //var downloadTask: URLSessionDownloadTask?
     var songRef: ThreadSafeReference<Song>?
-    var backgroundSession: URLSession!
+    //var backgroundSession: URLSession!
     var songManager: SongManager!
     
     override func viewDidLoad() {
@@ -60,9 +53,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
         self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
         
-        if TrackViewMode.mode != .fromListOfPlaylists || !SongManagerFactory.isSamePlaylist {
+        if !SongManagerFactory.isSamePlaylist {
             createPlaylist()
-            //songManager.setIndex(value: 0)
+
         }
         else {
             if let currentTime = songManager.jukebox.currentItem?.currentTime, let duration = songManager.jukebox.currentItem?.meta.duration {
@@ -81,9 +74,6 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         if let position = songManager.getPosition() {
             setupSong(position: position)
         }
-        
-        progressDownloadIndicator.setProgress(0.0, animated: false)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,12 +88,8 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             setupSong(position: position)
         }
         
-        downdloadLabel.isHidden = true
-        progressDownloadIndicator.isHidden = true
-        progressDownloadIndicator.progress = 0.0
-        
         //checkDownloadImage
-        updateDownloadButton()
+        updateMarkButton()
         
         if SongManagerFactory.isSamePlaylist {
             songManager.jukebox.delegate = self
@@ -143,16 +129,9 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             var urlString = "\(SERVER_IP)\(song.song_url)"
             urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
             let url = URL(string : urlString)!
-            if TrackViewMode.mode == .fromListOfPlaylists {
-                songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
-            }
-            else {
-                if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
-                    if let localUrl = getFileLocalPathByUrl(audioUrl) {
-                        songManager.jukebox.append(item: JukeboxItem(URL: localUrl), loadingAssets: false)
-                    }
-                }
-            }
+            
+            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
+        
             songManager.addSong(song: song)
             songManager.images.append(UIImage(named: "default_album_v2")!)
         }
@@ -239,8 +218,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                         jukebox.play(atIndex: position - 1)
                         setupSong(position: position)
                     }
-                    updateDownloadButton()
-                    stopDowload()
+                    updateMarkButton()
                 }
                 else {
                     jukebox.replayCurrentItem()
@@ -310,7 +288,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                     SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                     setupSong(position: position)
                 }
-                updateDownloadButton()
+                updateMarkButton()
             case .remoteControlPreviousTrack:
                 
                 if !SongManagerFactory.isSamePlaylist {
@@ -327,7 +305,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
                     SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
                     setupSong(position: position)
                 }
-                updateDownloadButton()
+                updateMarkButton()
             case .remoteControlTogglePlayPause:
                 if songManager.jukebox.state == .playing {
                     songManager.jukebox.pause()
@@ -459,17 +437,17 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
         
         if let position = songManager.getNextPosition() {
-
-            songManager.jukebox.play(atIndex: position - 1)
-            resetUI()
-            SongManagerFactory.shouldColorPlaylist = true
-            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
-            setupSong(position: position)
             
+            if position-1 != songManager.jukebox.playIndex {
+                songManager.jukebox.play(atIndex: position - 1)
+                resetUI()
+                SongManagerFactory.shouldColorPlaylist = true
+                SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
+                setupSong(position: position)
+            }
         }
         
-        stopDowload()
-        updateDownloadButton()
+        updateMarkButton()
         
     }
     
@@ -490,8 +468,7 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
             }
             setupSong(position: position)
             }
-        stopDowload()
-        updateDownloadButton()
+        updateMarkButton()
         
     }
     
@@ -530,14 +507,12 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
     @IBAction func goToPlaylist(_ sender: Any) {
         
         self.performSegue(withIdentifier: SegueRouter.toPlaylist.rawValue, sender: playlist)
-        stopDowload()
     }
     
     
     @IBAction func goBack(_ sender: Any) {
         
         self.navigationController?.popViewController(animated: true)
-        stopDowload()
 
     }
     
@@ -595,194 +570,26 @@ class TrackViewController: UIViewController, JukeboxDelegate, URLSessionDownload
         }
     }
 
-    @IBAction func downloadSong(_ sender: Any) {
+    @IBAction func markSong(_ sender: Any) {
         
-        let SERVER_IP = APIManager.getServerIP()
         if let song = song {
-            songRef = ThreadSafeReference(to: song)
-            if let audioUrl = URL(string: "\(SERVER_IP)\(song.song_url)") {
-                if let localUrl = getFileLocalPathByUrl(audioUrl) {
-                    print("The file already exists at path: \(localUrl)")
-                    removeSongFileLocally(audioUrl)
-                    removeFromLocalPlaylist()
-                }
-                else {
-                    startDownload(audioUrl: audioUrl)
-                }
+            if song.isSaved {
+                DatabaseManager.setFlagOff(song: song)
             }
-        }
-    }
-    
-    
-    func getFileLocalPathByUrl(_ fileUrl: URL) -> URL? {
-        // create your document folder url
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        // your destination file url
-        let fileName = fileUrl.lastPathComponent
-            // your destination file url
-        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-            
-        if FileManager().fileExists(atPath: destinationUrl.path) {
-            return destinationUrl
-        }
-        return nil
-    }
-    
-    // #MARK: - NSURLSessionDownloadDelegate
-    
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-        print("download task did resume")
-    }
-    
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-         print("download task did finish")
-        
-        let audioUrl = downloadTask.originalRequest?.url
-        
-        if let data = try? Data(contentsOf: location) {
-            storeFileLocally(remoteFileUrl: audioUrl! as NSURL, data)
-            
-            DispatchQueue.main.async {
-                self.downdloadLabel.isHidden = true
-                self.progressDownloadIndicator.isHidden = true
-                self.progressDownloadIndicator.progress = 0.0
-                self.downloadSongButton.setImage(UIImage(named: "ic_save_on"), for: UIControlState())
+            else {
+                DatabaseManager.setFlagOn(song: song)
             }
-        }
-    }
-    
-    func urlSession(_ session: URLSession,
-                    task: URLSessionTask,
-                    didCompleteWithError error: Error?){
-        downloadTask = nil
-        progressDownloadIndicator.setProgress(0.0, animated: true)
-        if (error != nil) {
-            print(error!.localizedDescription)
-        }else{
-            print("The task finished transferring data successfully")
-        }
-    }
-    
-    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-        print("error")
-    }
-    
-    func urlSession(_ session: URLSession,
-                    downloadTask: URLSessionDownloadTask,
-                    didWriteData bytesWritten: Int64,
-                    totalBytesWritten: Int64,
-                    totalBytesExpectedToWrite: Int64){
-        
-        DispatchQueue.main.async {
-            self.progressDownloadIndicator.setProgress(Float(totalBytesWritten)/Float(totalBytesExpectedToWrite), animated: true)
-            
+            updateMarkButton()
         }
         
     }
     
-    func storeFileLocally(remoteFileUrl: NSURL, _ data: Data?) {
-        // create your document folder url
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        // your destination file url
-        if let fileName = remoteFileUrl.lastPathComponent {
-            let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-            
-            if let data = data {
-                do {
-                    try data.write(to: destinationUrl, options: Data.WritingOptions.atomicWrite)
-                    print("file saved at \(destinationUrl)")
-                    //set saved flag
-                    addToLocalPlaylist()
-                }
-                catch {
-                    print(error)
-                }
-            }
+    func updateMarkButton () {
+        if song!.isSaved {
+            markSongButton.setImage(UIImage(named: "ic_grade_on"), for: UIControlState())
         }
         else {
-            print("fileName is nil")
-        }
-    }
-    
-    
-    func startDownload(audioUrl: URL) {
-        
-            if downloadTask == nil {
-                let backgroundSessionConfiguration = URLSessionConfiguration.background(withIdentifier: "backgroundSession")
-                backgroundSession = Foundation.URLSession(configuration: backgroundSessionConfiguration, delegate: self, delegateQueue: OperationQueue.main)
-                downloadTask = backgroundSession.downloadTask(with: audioUrl)
-                downdloadLabel.isHidden = false
-                progressDownloadIndicator.isHidden = false
-                downloadTask!.resume()
-                //songRef = ThreadSafeReference(to: song!)
-        }
-        
-    }
-    
-    func stopDowload() {
-        
-        self.downdloadLabel.isHidden = true
-        self.progressDownloadIndicator.isHidden = true
-        self.progressDownloadIndicator.progress = 0.0
-        if downloadTask != nil {
-            downloadTask!.cancel()
-        }
-        if let backgroundSession = backgroundSession {
-            backgroundSession.invalidateAndCancel()
-        }
-        
-    }
-    
-    func removeSongFileLocally(_ fileUrl: URL) {
-        
-        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        
-        // your destination file url
-        let fileName = fileUrl.lastPathComponent
-        // your destination file url
-        let destinationUrl = documentsUrl.appendingPathComponent(fileName)
-        
-        if FileManager().fileExists(atPath: destinationUrl.path) {
-            
-            do {
-                try FileManager().removeItem(at: destinationUrl)
-            }
-            catch {
-                print(error)
-            }
-        }
-        updateDownloadButton()
-    }
-    
-    func addToLocalPlaylist() {
-        
-        if let song = songRef {
-            DatabaseManager.setFlagOn(song: song)
-        }
-        
-    }
-    
-    func removeFromLocalPlaylist() {
-        if let song = songRef {
-            DatabaseManager.setFlagOff(song: song)
-        }
-    }
-    
-    func updateDownloadButton () {
-        
-        let SERVER_IP = APIManager.getServerIP()
-        
-        if let songURL = song?.song_url {
-            if let audioUrl = URL(string: "\(SERVER_IP)\(songURL)") {
-                if getFileLocalPathByUrl(audioUrl) != nil {
-                    downloadSongButton.setImage(UIImage(named: "ic_save_on"), for: UIControlState())
-                }
-                else {
-                    downloadSongButton.setImage(UIImage(named: "ic_save_off"), for: UIControlState())
-                }
-            }
+            markSongButton.setImage(UIImage(named: "ic_grade_off"), for: UIControlState())
         }
     }
 }
