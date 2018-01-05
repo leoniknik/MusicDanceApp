@@ -125,76 +125,117 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Мы всегда на связи!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q23-yK-ks4">
-                                <rect key="frame" x="65" y="154" width="191.5" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Служба поддержки" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNO-er-3Mq">
-                                <rect key="frame" x="65" y="201" width="191.5" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="support.ios@rxproject.ru" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TqT-zz-RSn">
-                                <rect key="frame" x="65" y="230" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Сотрудничество" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dLs-Sy-WQc">
-                                <rect key="frame" x="65" y="277" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="info@rxproject.ru" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6id-T9-wbO">
-                                <rect key="frame" x="65" y="303" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Сообщество VK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y9R-Hh-jfp">
-                                <rect key="frame" x="65" y="353" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="vk.com/rxproject_studio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hx8-hm-G8l">
-                                <rect key="frame" x="65" y="379" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Правовая политика" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWU-5c-DQV">
-                                <rect key="frame" x="65" y="423" width="191.5" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Logotip_RxProject" translatesAutoresizingMaskIntoConstraints="NO" id="Bza-YM-jyn">
-                                <rect key="frame" x="95" y="8" width="130" height="130"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydz-fl-xYY">
-                                <rect key="frame" x="227" y="419" width="26" height="26"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="ic_arrow_right-2"/>
-                                <connections>
-                                    <segue destination="V4m-ez-7Zl" kind="show" id="9pW-Cx-CdC"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rc1-C6-11d">
+                                <rect key="frame" x="45" y="15.5" width="231.5" height="473"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Правовая политика" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWU-5c-DQV">
+                                        <rect key="frame" x="20" y="439" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="vk.com/rxproject_studio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hx8-hm-G8l">
+                                        <rect key="frame" x="20" y="391" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сообщество VK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y9R-Hh-jfp">
+                                        <rect key="frame" x="20" y="365" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="info@rxproject.ru" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6id-T9-wbO">
+                                        <rect key="frame" x="20" y="315" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сотрудничество" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dLs-Sy-WQc">
+                                        <rect key="frame" x="20" y="289" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="support.ios@rxproject.ru" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TqT-zz-RSn">
+                                        <rect key="frame" x="20" y="242" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Служба поддержки" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FNO-er-3Mq">
+                                        <rect key="frame" x="20" y="213" width="191.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Мы всегда на связи!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q23-yK-ks4">
+                                        <rect key="frame" x="20" y="166" width="191.5" height="19.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logotip_RxProject" translatesAutoresizingMaskIntoConstraints="NO" id="Bza-YM-jyn">
+                                        <rect key="frame" x="50" y="20" width="130" height="130"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="3Tq-Vo-n8E"/>
+                                            <constraint firstAttribute="height" constant="130" id="W8D-9u-sil"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydz-fl-xYY">
+                                        <rect key="frame" x="183" y="435" width="26" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="26" id="qgZ-rN-b98"/>
+                                            <constraint firstAttribute="height" constant="26" id="z46-by-8ME"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_arrow_right-2"/>
+                                        <connections>
+                                            <segue destination="V4m-ez-7Zl" kind="show" id="9pW-Cx-CdC"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="hx8-hm-G8l" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="01T-qS-1k3"/>
+                                    <constraint firstItem="Bza-YM-jyn" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="50" id="09M-ve-UJk"/>
+                                    <constraint firstItem="FNO-er-3Mq" firstAttribute="top" secondItem="Q23-yK-ks4" secondAttribute="bottom" constant="27.5" id="2PI-Nk-Nbz"/>
+                                    <constraint firstAttribute="trailing" secondItem="Q23-yK-ks4" secondAttribute="trailing" constant="20" id="6f3-Yp-LeE"/>
+                                    <constraint firstItem="Bza-YM-jyn" firstAttribute="top" secondItem="rc1-C6-11d" secondAttribute="top" constant="20" id="7dW-GJ-Mnh"/>
+                                    <constraint firstItem="ydz-fl-xYY" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="183" id="9zv-FJ-dRg"/>
+                                    <constraint firstAttribute="trailing" secondItem="FNO-er-3Mq" secondAttribute="trailing" constant="20" id="Avq-gS-RaF"/>
+                                    <constraint firstAttribute="trailing" secondItem="BWU-5c-DQV" secondAttribute="trailing" constant="20" id="EqR-cE-Lm1"/>
+                                    <constraint firstAttribute="trailing" secondItem="6id-T9-wbO" secondAttribute="trailing" constant="20" id="FQK-UW-BYh"/>
+                                    <constraint firstAttribute="trailing" secondItem="Y9R-Hh-jfp" secondAttribute="trailing" constant="20" id="GH4-F8-a1B"/>
+                                    <constraint firstItem="TqT-zz-RSn" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="HYx-ZN-bM5"/>
+                                    <constraint firstItem="dLs-Sy-WQc" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="PPY-MA-qki"/>
+                                    <constraint firstItem="hx8-hm-G8l" firstAttribute="top" secondItem="Y9R-Hh-jfp" secondAttribute="bottom" constant="8" id="ZBJ-ZN-pQP"/>
+                                    <constraint firstItem="6id-T9-wbO" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="bQw-66-6wc"/>
+                                    <constraint firstAttribute="height" constant="473" id="csu-wn-S5U"/>
+                                    <constraint firstItem="ydz-fl-xYY" firstAttribute="top" secondItem="hx8-hm-G8l" secondAttribute="bottom" constant="26" id="eTD-b9-u6B"/>
+                                    <constraint firstItem="Q23-yK-ks4" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="fez-2v-BDa"/>
+                                    <constraint firstAttribute="trailing" secondItem="dLs-Sy-WQc" secondAttribute="trailing" constant="20" id="hLg-wI-b3v"/>
+                                    <constraint firstItem="TqT-zz-RSn" firstAttribute="top" secondItem="FNO-er-3Mq" secondAttribute="bottom" constant="11" id="hSg-PL-7jQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="Bza-YM-jyn" secondAttribute="trailing" constant="51.5" id="i8J-fr-dBS"/>
+                                    <constraint firstItem="BWU-5c-DQV" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="niH-fN-Ob9"/>
+                                    <constraint firstItem="Q23-yK-ks4" firstAttribute="top" secondItem="Bza-YM-jyn" secondAttribute="bottom" constant="16" id="oh8-tl-MVp"/>
+                                    <constraint firstAttribute="trailing" secondItem="TqT-zz-RSn" secondAttribute="trailing" constant="20" id="prU-nd-AIR"/>
+                                    <constraint firstItem="6id-T9-wbO" firstAttribute="top" secondItem="dLs-Sy-WQc" secondAttribute="bottom" constant="8" id="qAl-AJ-tsu"/>
+                                    <constraint firstItem="BWU-5c-DQV" firstAttribute="top" secondItem="hx8-hm-G8l" secondAttribute="bottom" constant="30" id="rhB-Jk-8yB"/>
+                                    <constraint firstItem="Y9R-Hh-jfp" firstAttribute="top" secondItem="6id-T9-wbO" secondAttribute="bottom" constant="32" id="vl1-oM-aMF"/>
+                                    <constraint firstAttribute="trailing" secondItem="hx8-hm-G8l" secondAttribute="trailing" constant="20" id="wLf-2z-ELZ"/>
+                                    <constraint firstItem="dLs-Sy-WQc" firstAttribute="top" secondItem="TqT-zz-RSn" secondAttribute="bottom" constant="29" id="y91-OW-lcw"/>
+                                    <constraint firstItem="FNO-er-3Mq" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="yZ7-Vn-QxP"/>
+                                    <constraint firstItem="Y9R-Hh-jfp" firstAttribute="leading" secondItem="rc1-C6-11d" secondAttribute="leading" constant="20" id="zkq-qG-9D6"/>
+                                    <constraint firstAttribute="width" constant="231.5" id="zuM-A9-VVm"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="rc1-C6-11d" firstAttribute="centerX" secondItem="hlF-QO-Uw4" secondAttribute="centerX" id="O5V-qQ-wXJ"/>
+                            <constraint firstItem="rc1-C6-11d" firstAttribute="centerY" secondItem="hlF-QO-Uw4" secondAttribute="centerY" id="jgJ-ia-i76"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="u24-gN-Stj"/>
                     </view>
                     <navigationItem key="navigationItem" id="4yy-kh-Z5K">
@@ -900,6 +941,6 @@
         <image name="logo_clubs" width="160" height="160"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="jXg-gi-yrZ"/>
+        <segue reference="N49-5U-qZp"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class MenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -117,7 +118,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func share(tableView: UITableView, indexPath: IndexPath) {
         
-            let textToShare = "Включай быстрее Dance Family Music, ждем только тебя!\nТеперь все клубы DF всегда с тобой!\nСкачай DF Music прямо сейчас"
+            let textToShare = "Все клубы Dance Family в одном приложении!\nСкачай DF Music прямо сейчас\nhttps://itunes.apple.com/ru/app/df-music/id1265946456?mt=8"
         
             let objectsToShare = [textToShare]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
@@ -132,12 +133,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func mark() {
-        let url = URL(string: "http://itunes.apple.com/app/id1265946456")!
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
+        SKStoreReviewController.requestReview()
     }
     
     func favorites() {

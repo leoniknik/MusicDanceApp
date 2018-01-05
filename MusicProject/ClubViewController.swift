@@ -31,7 +31,7 @@ class ClubViewController: UIViewController {
 
     @IBAction func share(_ sender: Any) {
         
-        let textToShare = "Все клубы Dance Family в одном приложении!\nСкачай DF Music прямо сейчас\nhttps://itunes.apple.com/us/app/df-music/id1265946456?mt=8"
+        let textToShare = "Все клубы Dance Family в одном приложении!\nСкачай DF Music прямо сейчас\nhttps://itunes.apple.com/ru/app/df-music/id1265946456?mt=8"
         
         let objectsToShare = [textToShare] as [Any]
         let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)

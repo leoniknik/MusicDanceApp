@@ -21,7 +21,19 @@ class ContactViewController: UIViewController {
     }
     
     @IBAction func share(_ sender: Any) {
-        let textToShare = "Мне нравится HILK STUDIO!\n\nHILK В VK\nhttps://vk.com/hilk_studio\n\nСОТРУДНИЧЕСТВО C HILK\nhilk.commerce@gmail.com\n\nСЛУЖБА ПОДДЕРЖКИ HILK\nhilk.helpdesk@gmail.com\n\nСкачай DF Music прямо сейчас"
+        let textToShare = """
+        Мне нравится RxProject!\n
+        \n
+        RxProject В VK\n
+        https://vk.com/rxproject_studio\n
+        \n
+        СОТРУДНИЧЕСТВО c RxProject\n
+        info@rxproject.ru\n
+        \n
+        СЛУЖБА ПОДДЕРЖКИ RxProject\n
+        support.ios@rxproject.ru\n
+        \n
+        """
         
         let objectsToShare = [textToShare] as [Any]
         let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
@@ -37,7 +49,7 @@ class ContactViewController: UIViewController {
         label.numberOfLines = 2
         label.font = UIFont.boldSystemFont(ofSize: 16.0)
         label.textAlignment = .center
-        label.textColor = UIColor.white
+        label.textColor = UIColor.black
         
         //customize multiline text for navigationbar title
         let firstAttributes = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 16)]
