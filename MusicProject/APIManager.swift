@@ -14,7 +14,7 @@ import AlamofireImage
 
 class APIManager {
 
-    private static let SERVER_IP = "http://188.166.211.232"
+    private static let SERVER_IP = "http://188.226.190.221:8000"
 //    private static let SERVER_IP = "http://192.168.1.44:8000"
 
     private static let GET_PLAYLISTS_URL = "\(SERVER_IP)/musicapi/v2/getplaylists"

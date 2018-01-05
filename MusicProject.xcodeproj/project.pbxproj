@@ -32,8 +32,8 @@
 		CAB91B181EF94E8200A69544 /* MenuViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB91B171EF94E8200A69544 /* MenuViewCell.swift */; };
 		CAD0B80E1EE482C000C8B2B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */; };
 		CAD0B8131EE482C000C8B2B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8111EE482C000C8B2B1 /* Main.storyboard */; };
-		CAD0B8151EE482C000C8B2B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8141EE482C000C8B2B1 /* Assets.xcassets */; };
 		CAD0B8181EE482C000C8B2B1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAD0B8161EE482C000C8B2B1 /* LaunchScreen.storyboard */; };
+		CAD521F91FE679DB00264ABD /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CAD521F81FE679DB00264ABD /* Media.xcassets */; };
 		CAE0B3001EF93C51005EE0FD /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */; };
 		CAE70C101EF5B47C0069106E /* TrackViewMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */; };
 		CAEED8F61F06830F00D848F2 /* NetworkChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */; };
@@ -68,9 +68,9 @@
 		CAD0B80A1EE482C000C8B2B1 /* MusicProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CAD0B8121EE482C000C8B2B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		CAD0B8141EE482C000C8B2B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CAD0B8171EE482C000C8B2B1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CAD0B8191EE482C000C8B2B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CAD521F81FE679DB00264ABD /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		CAE0B2FF1EF93C51005EE0FD /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		CAE70C0F1EF5B47C0069106E /* TrackViewMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackViewMode.swift; sourceTree = "<group>"; };
 		CAEED8F51F06830F00D848F2 /* NetworkChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkChecker.swift; sourceTree = "<group>"; };
@@ -202,8 +202,8 @@
 				CA9618081EEC749900B75202 /* Models */,
 				CA9618071EEC748C00B75202 /* Controllers */,
 				CAD0B80D1EE482C000C8B2B1 /* AppDelegate.swift */,
-				CAD0B8141EE482C000C8B2B1 /* Assets.xcassets */,
 				CAD0B8191EE482C000C8B2B1 /* Info.plist */,
+				CAD521F81FE679DB00264ABD /* Media.xcassets */,
 			);
 			path = MusicProject;
 			sourceTree = "<group>";
@@ -238,7 +238,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Кирилл Володин";
 				TargetAttributes = {
 					CAD0B8091EE482BF00C8B2B1 = {
@@ -271,7 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAD0B8181EE482C000C8B2B1 /* LaunchScreen.storyboard in Resources */,
-				CAD0B8151EE482C000C8B2B1 /* Assets.xcassets in Resources */,
+				CAD521F91FE679DB00264ABD /* Media.xcassets in Resources */,
 				CAD0B8131EE482C000C8B2B1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,7 +392,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -400,7 +402,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -429,7 +435,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -443,7 +449,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -451,7 +459,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -472,7 +484,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

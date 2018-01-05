@@ -28,7 +28,6 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         Menu(image: UIImage(named: "ic_info_menu")!, title: "Dance Family"),
         Menu(image: UIImage(named: "ic_save_on")!, title: "Сохраненные аудиозаписи"),
         Menu(image: UIImage(named: "ic_like_menu")!, title: "Оценить приложение"),
-        Menu(image: UIImage(named: "ic_money_menu")!, title: "Поддержать проект"),
         Menu(image: UIImage(named: "ic_email_menu")!, title: "Написать разработчикам")
     ]
     
@@ -109,8 +108,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 1: self.performSegue(withIdentifier: SegueRouter.toDanceFamily.rawValue, sender: nil)
         case 2: favorites()
         case 3: mark()
-        case 4: self.performSegue(withIdentifier: SegueRouter.toDonate.rawValue, sender: nil)
-        case 5: self.performSegue(withIdentifier: SegueRouter.toMail.rawValue, sender: nil)
+        case 4: self.performSegue(withIdentifier: SegueRouter.toMail.rawValue, sender: nil)
         default: break
         }
         

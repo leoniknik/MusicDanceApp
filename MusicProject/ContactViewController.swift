@@ -41,7 +41,7 @@ class ContactViewController: UIViewController {
         
         //customize multiline text for navigationbar title
         let firstAttributes = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 16)]
-        let firstLine = NSMutableAttributedString(string:"HILK STUDIO\n", attributes:firstAttributes)
+        let firstLine = NSMutableAttributedString(string:"RxProject\n", attributes:firstAttributes)
         let secondAttributes =  [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 13)]
         let secondLine = NSAttributedString(string:"CONTACTS", attributes:secondAttributes)
         firstLine.append(secondLine)
