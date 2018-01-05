@@ -14,23 +14,25 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
 
     @IBOutlet weak var playlistsTable: UITableView!
     
-    var playlists: Results<Playlist> = DatabaseManager.getPlaylists()
+//    var playlists: Results<Playlist>? = nil
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
         setupUI()
         playlistsTable.dataSource = self
         playlistsTable.delegate = self
         playlistsTable.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallback(_:)), name: .getPlaylistsCallback, object: nil)
          NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
-        APIManager.getPlaylistsRequest()
-        
+        DispatchQueue.global(qos: .userInitiated).async {
+            APIManager.getPlaylistsRequest()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        UIApplication.shared.statusBarStyle = .lightContent
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = UIColor.black
         navigationController?.navigationBar.setBackgroundImage(UIImage(color: UIColor.black), for: .default)

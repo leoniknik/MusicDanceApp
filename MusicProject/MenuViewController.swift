@@ -48,7 +48,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
-        
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     func setupUI() {

@@ -261,33 +261,36 @@
         <!--Правовая политика-->
         <scene sceneID="62W-n1-0gN">
             <objects>
-                <viewController id="V4m-ez-7Zl" sceneMemberID="viewController">
+                <viewController id="V4m-ez-7Zl" customClass="RightsPoliticsViewController" customModule="MusicProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PV7-rt-uNp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2xT-ci-1xS">
-                                <rect key="frame" x="16" y="44" width="288" height="440"/>
-                                <string key="text">Команда RxProject не несет ответственности за контент, который размещен в приложении DF Music. Мы предоставляем администраторам (заказчику) со стороны Dance Family техническую возможность размещать и хранить информацию на серверах третьих лиц. Чтобы получить возможность размещать и хранить свой контент заказчик принимают условия пользовательских соглашений, в соответствии с которыми обязуются не создавать и не размещать незаконный контент.
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pB9-bF-9Mz">
+                                <rect key="frame" x="8" y="0.0" width="304" height="465.5"/>
+                                <mutableString key="text">Команда RxProject не несет ответственности за контент, который размещен в приложении DF Music. Мы предоставляем администраторам (заказчику) со стороны Dance Family техническую возможность размещать и хранить информацию на серверах третьих лиц. Чтобы получить возможность размещать и хранить свой контент заказчик принимают условия пользовательских соглашений, в соответствии с которыми обязуются не создавать и не размещать незаконный контент.
 
 Мы уважаем права и интересы правообладателей, а также пользователей наших сервисов. У вас есть возможность отправить возникшие жалобы  на почту info@rxproject.ru, в теме письма указать «Жалоба. DF Music». Жалобы должны быть обоснованными и содержать необходимую информацию для принятия решения о мерах реагирования.
-</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="bdV-LQ-1XZ" firstAttribute="trailing" secondItem="2xT-ci-1xS" secondAttribute="trailing" constant="16" id="4CY-rA-tai"/>
-                            <constraint firstItem="2xT-ci-1xS" firstAttribute="top" secondItem="bdV-LQ-1XZ" secondAttribute="top" constant="44" id="EFM-FI-IbB"/>
-                            <constraint firstItem="2xT-ci-1xS" firstAttribute="leading" secondItem="bdV-LQ-1XZ" secondAttribute="leading" constant="16" id="yyF-QJ-PSn"/>
+                            <constraint firstAttribute="trailing" secondItem="pB9-bF-9Mz" secondAttribute="trailing" constant="8" id="082-rR-x9M"/>
+                            <constraint firstItem="pB9-bF-9Mz" firstAttribute="leading" secondItem="bdV-LQ-1XZ" secondAttribute="leading" constant="8" id="JX8-NS-wg6"/>
+                            <constraint firstItem="pB9-bF-9Mz" firstAttribute="top" secondItem="bdV-LQ-1XZ" secondAttribute="top" id="qD1-k1-waM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bdV-LQ-1XZ"/>
                     </view>
                     <navigationItem key="navigationItem" title="Правовая политика" id="fk9-hl-4AS">
                         <barButtonItem key="leftBarButtonItem" image="ic_backward" id="XMD-5A-fx8">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="goBack:" destination="V4m-ez-7Zl" id="zM1-Vh-lKK"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                 </viewController>

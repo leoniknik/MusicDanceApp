@@ -13,7 +13,11 @@ class ContactViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .default
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -61,5 +65,6 @@ class ContactViewController: UIViewController {
         label.attributedText = firstLine
         self.navigationItem.titleView = label
     }
+
 
 }
