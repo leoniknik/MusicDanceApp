@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Jukebox
+import SwiftyJSON
 
 class PlaylistViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -16,8 +17,8 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var shuffleItem: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    var playlist: Playlist?
-    var jukebox: Jukebox!
+    var playlist: PlaylistDisplay!
+    var jukebox: Jukebox?
     var songManager: SongManager!
 
     override func viewDidLoad() {
@@ -28,20 +29,51 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         songsTable.dataSource = self
         songsTable.delegate = self
         songsTable.separatorStyle = .none
-        setupUI()
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI(_:)), name: .playNextSong, object: nil)
         
+        if !SongManagerFactory.isSamePlaylist {
+            createPlaylist()
+        }
+        else {
+            
+        }
+    }
+    
+    func createPlaylist() {
+        
+        let SERVER_IP = APIManager.getServerIP()
+        songManager.jukebox = Jukebox(delegate: nil, items: [
+            ])!
+        
+        let songs: [SongDisplay] = playlist.songs
+
+        songManager.songs.removeAll()
+        songManager.images.removeAll()
+        songManager.setIndex(value: 0)
+        
+        for song in songs {
+            var urlString = "\(SERVER_IP)\(song.song_url)"
+            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+            let url = URL(string : urlString)!
+            
+            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: true)
+            
+            songManager.addSong(song: song)
+            songManager.images.append(UIImage(named: "default_album_v2")!)
+        }
+        songManager.backup = songManager.songs
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        setupUI()
+        songsTable.reloadData()
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
-        
     }
     
     @IBAction func goBack(_ sender: Any) {
@@ -123,6 +155,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         let cell = songsTable.dequeueReusableCell(withIdentifier: "SongViewCell") as! SongViewCell
         let index = indexPath.row
+        
+        songManager = SongManagerFactory.getSongManager()
+        
         if index == songManager.getIndex() {
             cell.number.textColor = UIColor.red
             cell.name.textColor = UIColor.red
@@ -148,22 +183,33 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         
         tableView.deselectRow(at: indexPath, animated: true)
         let index = indexPath.row
-        self.navigationController?.popViewController(animated: true)
-        let previousController = self.navigationController?.topViewController as! TrackViewController
-        let position = songManager.songs[index].position
-        songManager.setIndex(bySongPosition: position)
-        let juckboxItemPosition = songManager.songs[songManager.getIndex()].position - 1
-        previousController.resetUI()
-
-        if !SongManagerFactory.isSamePlaylist {
-            SongManagerFactory.copyJukebox()
-        }
         
-        previousController.songManager = SongManagerFactory.getSongManager()
-
-        previousController.songManager.jukebox.play(atIndex: juckboxItemPosition)
-        SongManagerFactory.shouldColorPlaylist = true
-        SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
+        self.performSegue(withIdentifier: SegueRouter.toTrack.rawValue, sender: index as Any?)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == SegueRouter.toTrack.rawValue {
+            let destinationViewController = segue.destination as! TrackViewController
+            let index = sender as! Int
+            
+            let position = songManager.songs[index].position
+            songManager.setIndex(bySongPosition: position)
+            let juckboxItemPosition = songManager.songs[songManager.getIndex()].position - 1
+            
+            if !SongManagerFactory.isSamePlaylist {
+                SongManagerFactory.copyJukebox()
+            }
+            
+            destinationViewController.songManager = SongManagerFactory.getSongManager()
+            destinationViewController.playlist = playlist
+            
+            destinationViewController.songManager.jukebox.play(atIndex: juckboxItemPosition)
+            SongManagerFactory.shouldColorPlaylist = true
+            SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
+            
+        }
         
     }
     
@@ -183,6 +229,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func updateUI(_ notification: NSNotification) {
-        songsTable.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.songsTable.reloadData()
+        }
     }
+    
 }

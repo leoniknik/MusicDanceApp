@@ -57,10 +57,10 @@ class SongManager: JukeboxDelegate {
     
     class SongWrapper {
         
-        var song: Song!
+        var song: SongDisplay!
         var position: Int
         
-        init (song: Song, position: Int) {
+        init (song: SongDisplay, position: Int) {
             self.song = song
             self.position = position
         }
@@ -99,7 +99,7 @@ class SongManager: JukeboxDelegate {
         
     }
     
-    func addSong(song: Song) {
+    func addSong(song: SongDisplay) {
         if TrackViewMode.mode == .fromListOfPlaylists {
             let songWrapper = SongWrapper(song: song, position: song.position)
             songs.append(songWrapper)
@@ -173,7 +173,7 @@ class SongManager: JukeboxDelegate {
         }
     }
     
-    func getSong(byPosition position: Int) -> Song? {
+    func getSong(byPosition position: Int) -> SongDisplay? {
         
         for song in songs {
             if song.position == position {

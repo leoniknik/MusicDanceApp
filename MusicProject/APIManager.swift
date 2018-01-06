@@ -14,8 +14,7 @@ import AlamofireImage
 
 class APIManager {
 
-    private static let SERVER_IP = "http://188.226.190.221:8000"
-//    private static let SERVER_IP = "http://192.168.1.44:8000"
+    private static let SERVER_IP = "http://188.226.190.221"
 
     private static let GET_PLAYLISTS_URL = "\(SERVER_IP)/musicapi/v2/getplaylists"
     private static let GET_SONGS_URL = "\(SERVER_IP)/musicapi/v2/getsongs"
@@ -29,7 +28,11 @@ class APIManager {
             "v"  : "2"
         ]
         
-        request(URL: GET_PLAYLISTS_URL, method: .get, parameters: parameters, onSuccess: getPlaylistsOnSuccess, onError: defaultOnError)
+        func getPlaylistsOnError(error: Any) -> Void {
+            NotificationCenter.default.post(name: .getPlaylistsCallbackError, object: nil, userInfo: nil)
+        }
+        
+        request(URL: GET_PLAYLISTS_URL, method: .get, parameters: parameters, onSuccess: getPlaylistsOnSuccess, onError: getPlaylistsOnError)
         
     }
 
@@ -44,7 +47,9 @@ class APIManager {
     }
     
     
-    class func getSongsRequest(playlist: Playlist) -> Void {
+    
+    
+    class func getSongsRequest(playlist: PlaylistDisplay) -> Void {
         
         print(playlist)
         
@@ -54,6 +59,12 @@ class APIManager {
             "playlist_id" : playlist.id
         ]
         
+        func onError(error: Any) -> Void {
+            
+            NotificationCenter.default.post(name: .getSongsCallbackError, object: nil, userInfo: nil)
+            
+        }
+        
         
         Alamofire.request(GET_SONGS_URL, method: .get, parameters: parameters ).validate().responseJSON { response in
             switch response.result {
@@ -61,14 +72,14 @@ class APIManager {
                 let json = JSON(value)
                 getSongsOnSuccess(json: json, playlist: playlist)
             case .failure(let error):
-                defaultOnError(error: error)
+                onError(error: error)
             }
         }
         
     }
     
     
-    private class func getSongsOnSuccess(json: JSON, playlist: Playlist) -> Void {
+    private class func getSongsOnSuccess(json: JSON, playlist: PlaylistDisplay) -> Void {
         
         print(json)
         let data = json["response"].dictionaryValue
@@ -77,16 +88,23 @@ class APIManager {
     }
     
     
-    class func getSongImage(song: Song, position: Int) {
+    class func getSongImage(song: SongDisplay?, position: Int) {
+        
+        guard let song = song else {
+            return
+        }
         
         let URL = "\(SERVER_IP)\(song.img_url)"
         let safeURL = URL.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-
+        DataRequest.addAcceptableImageContentTypes(["image/jpg"])
         Alamofire.request(safeURL).responseImage { response in
-            if let image = response.result.value {
-                
-                NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image": image, "position": position])
+            switch response.result {
+            case .success(let value):
+                NotificationCenter.default.post(name: .getSongImageCallback, object: nil, userInfo: ["image": value, "position": position])
+            case .failure(let error):
+                defaultOnError(error: error)
             }
+            
         }
         
     }
@@ -97,12 +115,12 @@ class APIManager {
     }
     
     
-    class func hotLoad() {
-        let playlists = DatabaseManager.getPlaylists()
-        for playlist in playlists {
-            APIManager.getSongsRequest(playlist: playlist)
-        }
-    }
+//    class func hotLoad() {
+//        let playlists = DatabaseManager.getPlaylists()
+//        for playlist in playlists {
+//            APIManager.getSongsRequest(playlist: playlist)
+//        }
+//    }
     
     
     private class func defaultOnSuccess(json: JSON) -> Void {

@@ -10,7 +10,7 @@ import Foundation
 
 enum SegueRouter: String {
     
-    case toAudioPlayer = "toAudioPlayer"
+    case toTrack = "toTrack"
     case toPlaylist = "toPlaylist"
     case toDanceFamily = "toDanceFamily"
     case toDonate = "toDonate"

@@ -13,8 +13,13 @@ import RealmSwift
 class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var playlistsTable: UITableView!
+    @IBOutlet weak var errorLabel: UILabel!
     
 //    var playlists: Results<Playlist>? = nil
+    var playlists = [PlaylistDisplay]()
+    var results = [Int]()
+    
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         
@@ -25,20 +30,48 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         playlistsTable.delegate = self
         playlistsTable.separatorStyle = .none
         NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallback(_:)), name: .getPlaylistsCallback, object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
-        DispatchQueue.global(qos: .userInitiated).async {
-            APIManager.getPlaylistsRequest()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(getPlaylistsCallbackError(_:)), name: .getPlaylistsCallbackError, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallback(_:)), name: .getSongsCallback, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getSongsCallbackError(_:)), name: .getSongsCallbackError, object: nil)
+
+        
+        setupRefreshView()
+        
+        self.playlistsTable.setContentOffset(CGPoint(x: 0, y: self.playlistsTable.contentOffset.y-self.refreshControl.frame.size.height), animated: false)
+        self.refreshControl.beginRefreshing()
+        getUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        updateRefreshControl()
+        playlistsTable.reloadData()
         UIApplication.shared.statusBarStyle = .lightContent
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = UIColor.black
         navigationController?.navigationBar.setBackgroundImage(UIImage(color: UIColor.black), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-        playlistsTable.reloadData()
-        
+    }
+    
+    func setupRefreshView() {
+        refreshControl.tintColor = .white
+        refreshControl.addTarget(self, action: #selector(getUpdate), for: .valueChanged)
+        //добавление активити для обновления
+        playlistsTable.refreshControl = refreshControl
+    }
+    
+    func getUpdate() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            APIManager.getPlaylistsRequest()
+        }
+    }
+    
+    func updateRefreshControl() {
+        if (self.playlistsTable.refreshControl?.isRefreshing ?? false) {
+            let offset = self.playlistsTable.contentOffset
+            self.playlistsTable.refreshControl?.endRefreshing()
+            self.playlistsTable.refreshControl?.beginRefreshing()
+            self.playlistsTable.contentOffset = offset
+        }
     }
     
     func setupUI() {
@@ -62,14 +95,11 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         label.attributedText = firstLine
         self.navigationItem.titleView = label
-        
+
     }
     
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return playlists.count
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -92,22 +122,14 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         
         let index = indexPath.row
         let playlist = playlists[index]
-        if !playlist.songs.isEmpty {
-            self.performSegue(withIdentifier: SegueRouter.toAudioPlayer.rawValue, sender: playlist)
+        self.performSegue(withIdentifier: SegueRouter.toPlaylist.rawValue, sender: playlist)
             
-            if SongManagerFactory.numberColoredPlaylist != index {
-                SongManagerFactory.isSamePlaylist = false
-            }
-            else {
-                SongManagerFactory.isSamePlaylist = true
-            }
-            
+        if SongManagerFactory.numberColoredPlaylist != index {
+            SongManagerFactory.isSamePlaylist = false
         }
         else {
-            APIManager.getSongsRequest(playlist: playlist)
-            showAlert()
+            SongManagerFactory.isSamePlaylist = true
         }
-        
     }
     
     func showAlert() {
@@ -130,42 +152,107 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     func getPlaylistsCallback(_ notification: NSNotification) {
         
         let data = notification.userInfo as! [String : JSON]
-        var IDs: [Int] = []
-        let playlists = data["playlists"]!.arrayValue
-        for playlist in playlists {
-            DatabaseManager.setPlaylist(json: playlist)
-            IDs.append(playlist["id"].int!)
+        guard let json = data["playlists"]?.arrayValue else {
+            return
         }
-        DatabaseManager.removePlaylists(IDs: IDs)
-        self.playlistsTable.reloadData()
-        APIManager.hotLoad()
+        for item in json {
+            let playlist = PlaylistDisplay()
+            guard let id = item["id"].int, let schoolName = item["school_owner"].string, let lastUpdate = item["last_update"].int, let position = item["pos"].int, let title = item["title"].string else {
+                continue
+            }
+            playlist.id = id
+            playlist.schoolName = schoolName
+            playlist.lastUpdate = lastUpdate
+            playlist.position = position
+            playlist.title = title
+            playlists.append(playlist)
+            
+        }
         
+        for playlist in playlists {
+            DispatchQueue.global(qos: .userInitiated).async {
+                APIManager.getSongsRequest(playlist: playlist)
+            }
+        }
+        
+//        DatabaseManager.removePlaylists(IDs: IDs)
+//
+//        APIManager.hotLoad()
+    }
+    
+    func getPlaylistsCallbackError(_ notification: NSNotification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.refreshControl.endRefreshing()
+            self?.errorLabel.isHidden = false
+        }
     }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == SegueRouter.toAudioPlayer.rawValue {
-            let destinationViewController = segue.destination as! TrackViewController
-            let playlist = sender as? Playlist
+//        if segue.identifier == SegueRouter.toPlaylist.raw {
+//            let destinationViewController = segue.destination as! TrackViewController
+//            let playlist = sender as? Playlist
+//            destinationViewController.playlist = playlist
+//            TrackViewMode.mode = .fromListOfPlaylists
+//
+//        }
+        
+        if segue.identifier == SegueRouter.toPlaylist.rawValue {
+            let destinationViewController = segue.destination as! PlaylistViewController
+            let playlist = sender as? PlaylistDisplay
             destinationViewController.playlist = playlist
-            TrackViewMode.mode = .fromListOfPlaylists
-            
+//            TrackViewMode.mode = .fromListOfPlaylists
         }
         
     }
     
+//    func getSongsCallback(_ notification: NSNotification) {
+//
+//        var IDs: [Int] = []
+//        let data = notification.userInfo?["data"] as! [String : JSON]
+//        let songs = data["songs"]!.arrayValue
+//        let playlist = notification.userInfo?["playlist"] as! Playlist
+//        for song in songs {
+//            DatabaseManager.setSong(json: song, playlist: playlist)
+//            IDs.append(song["id"].int!)
+//        }
+//        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
+//    }
+    
     func getSongsCallback(_ notification: NSNotification) {
         
-        var IDs: [Int] = []
         let data = notification.userInfo?["data"] as! [String : JSON]
         let songs = data["songs"]!.arrayValue
-        let playlist = notification.userInfo?["playlist"] as! Playlist
-        for song in songs {
-            DatabaseManager.setSong(json: song, playlist: playlist)
-            IDs.append(song["id"].int!)
+        let playlist = notification.userInfo?["playlist"] as! PlaylistDisplay
+        for item in songs {
+            let song = SongDisplay()
+            song.id = item["id"].int!
+            song.img_url = item["img_url"].string!
+            song.length = item["length"].int!
+            song.position = item["pos"].int!
+            song.singer = item["singer"].string!
+            song.song_url = item["song_url"].string!
+            song.title = item["title"].string!
+            playlist.songs.append(song)
         }
-        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
+        checkFinishLoading()
+    }
+    
+    func getSongsCallbackError(_ notification: NSNotification) {
+        checkFinishLoading()
+    }
+    
+    func checkFinishLoading() {
+        results.append(1)
+        if results.count == playlists.count {
+            DispatchQueue.main.async { [weak self] in
+                self?.refreshControl.endRefreshing()
+                self?.playlistsTable.refreshControl = nil
+                self?.errorLabel.isHidden = true
+                self?.playlistsTable.reloadData()
+            }
+        }
     }
     
 }

@@ -31,8 +31,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     @IBOutlet weak var backItem: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    var playlist: Playlist?
-    var song: Song?
+    var playlist: PlaylistDisplay?
+    var song: SongDisplay?
     var tapGestureRecognizer: Any?
     //var downloadTask: URLSessionDownloadTask?
     var songRef: ThreadSafeReference<Song>?
@@ -54,7 +54,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         self.songSlider.addGestureRecognizer(tapGestureRecognizer as! UIGestureRecognizer)
         
         if !SongManagerFactory.isSamePlaylist {
-            createPlaylist()
+//            createPlaylist()
 
         }
         else {
@@ -78,6 +78,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         
+        resetUI()
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -108,36 +109,36 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     func createPlaylist() {
         
-        let SERVER_IP = APIManager.getServerIP()
-        
-        songManager.jukebox = Jukebox(delegate: self, items: [
-            ])!
-        
-        let songs: Results<Song>
-        
-        if TrackViewMode.mode == .fromListOfPlaylists {
-            songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
-        }
-        else {
-            songs = DatabaseManager.getSavedSongs()
-        }
-        songManager.songs.removeAll()
-        songManager.images.removeAll()
-        songManager.setIndex(value: 0)
-        
-        for song in songs {
-            var urlString = "\(SERVER_IP)\(song.song_url)"
-            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-            let url = URL(string : urlString)!
-            
-            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
-        
-            songManager.addSong(song: song)
-            songManager.images.append(UIImage(named: "default_album_v2")!)
-        }
-
-        songManager.backup = songManager.songs
-        
+//        let SERVER_IP = APIManager.getServerIP()
+//
+//        songManager.jukebox = Jukebox(delegate: self, items: [
+//            ])!
+//
+//        let songs: Results<Song>
+//
+////        if TrackViewMode.mode == .fromListOfPlaylists {
+////            songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
+////        }
+////        else {
+////            songs = DatabaseManager.getSavedSongs()
+////        }
+//        songManager.songs.removeAll()
+//        songManager.images.removeAll()
+//        songManager.setIndex(value: 0)
+//
+//        for song in songs {
+//            var urlString = "\(SERVER_IP)\(song.song_url)"
+//            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+//            let url = URL(string : urlString)!
+//
+//            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
+//
+////            songManager.addSong(song: song)
+//            songManager.images.append(UIImage(named: "default_album_v2")!)
+//        }
+//
+//        songManager.backup = songManager.songs
+//
     }
     
     func setupRepeat() {
@@ -159,7 +160,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             titlePlaylist = playlist!.schoolName
         }
         else {
-            titlePlaylist = "SAVED SONGS"
+            titlePlaylist = "ЗАКЛАДКИ"
         }
         
         let label = UILabel(frame: CGRect(x:0, y:0, width:100, height:100))
@@ -342,22 +343,27 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     func setupSong(position: Int) {
         
         if TrackViewMode.mode == .fromListOfPlaylists {
-            if let songByPosition = DatabaseManager.getSongByPosition(playlist: playlist!, position: position) {
+            if let songByPosition = songManager.getSong(byPosition: position) {
                 song = songByPosition
                 print(song!)
             
                 updateSongImage()
-                APIManager.getSongImage(song: song!, position: position)
+                
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    APIManager.getSongImage(song: self?.song, position: position)
+                }
             
                 updateUI()
             }
         }
         else {
             if let songByPosition = songManager.getSong(byPosition: position) {
-                song = songByPosition
+//                song = songByPosition
                 print(song!)
                 updateSongImage()
-                APIManager.getSongImage(song: song!, position: position)
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    APIManager.getSongImage(song: self?.song, position: position)
+                }
                 updateUI()
             }
         }
@@ -517,15 +523,15 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == SegueRouter.toPlaylist.rawValue {
-            let destinationViewController = segue.destination as! PlaylistViewController
-            destinationViewController.playlist = sender as? Playlist
-            destinationViewController.jukebox = songManager.jukebox
-        }
-        
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        
+//        if segue.identifier == SegueRouter.toPlaylist.rawValue {
+//            let destinationViewController = segue.destination as! PlaylistViewController
+//            destinationViewController.playlist = sender as? Playlist
+//            destinationViewController.jukebox = songManager.jukebox
+//        }
+//        
+//    }
 
     //slider touch up for change value
     func sliderTapped(gestureRecognizer: UIGestureRecognizer) {
@@ -574,10 +580,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         if let song = song {
             if song.isSaved {
-                DatabaseManager.setFlagOff(song: song)
+//                DatabaseManager.setFlagOff(song: song)
             }
             else {
-                DatabaseManager.setFlagOn(song: song)
+//                DatabaseManager.setFlagOn(song: song)
             }
             updateMarkButton()
         }

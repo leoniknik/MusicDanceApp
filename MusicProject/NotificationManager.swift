@@ -14,5 +14,6 @@ extension Notification.Name {
     static let getSongsCallback = Notification.Name("getSongsCallback")
     static let getSongImageCallback = Notification.Name("getSongImageCallback")
     static let playNextSong = Notification.Name("playNextSong")
-    
+    static let getPlaylistsCallbackError = Notification.Name("getPlaylistsCallbackError")
+    static let getSongsCallbackError = Notification.Name("getSongsCallbackError")
 }

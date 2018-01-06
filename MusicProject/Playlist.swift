@@ -21,5 +21,19 @@ class Playlist: Object {
     override static func primaryKey() -> String? {
         return "id"
     }
+    
+//    override static func ignoredProperties() -> [String] {
+//        return ["tmpID"]
+//    }
 
 }
+
+class PlaylistDisplay {
+    var id: Int = 0
+    var schoolName: String = ""
+    var lastUpdate: Int = 0
+    var position: Int = 0
+    var title: String = ""
+    var songs = [SongDisplay]()
+}
+

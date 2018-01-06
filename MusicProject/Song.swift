@@ -26,3 +26,15 @@ class Song: Object {
     }
     
 }
+
+class SongDisplay {
+    var id: Int = 0
+    var song_url: String = ""
+    var title: String = ""
+    var position: Int = 0
+    var length: Int = 0
+    var img_url: String = ""
+    var singer: String = ""
+    weak var playlist: PlaylistDisplay?
+    var isSaved: Bool = false
+}
