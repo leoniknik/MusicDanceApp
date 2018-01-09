@@ -20,6 +20,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     var playlist: PlaylistDisplay!
     var jukebox: Jukebox?
     var songManager: SongManager!
+    var isFromTrack = false
 
     override func viewDidLoad() {
         
@@ -34,7 +35,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI(_:)), name: .playNextSong, object: nil)
         
         if !SongManagerFactory.isSamePlaylist {
-            createPlaylist()
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.createPlaylist()
+            }
         }
         else {
             
@@ -66,11 +69,18 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             songManager.images.append(UIImage(named: "default_album_v2")!)
         }
         songManager.backup = songManager.songs
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.songsTable.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupUI()
-        songsTable.reloadData()
+        if isFromTrack {
+            songsTable.reloadData()
+        }
+        isFromTrack = false
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)

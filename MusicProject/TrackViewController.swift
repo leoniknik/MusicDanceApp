@@ -461,6 +461,10 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     @IBAction func goBack(_ sender: Any) {
         
+        if let viewController = self.navigationController?.previousViewController() as? PlaylistViewController {
+            viewController.isFromTrack = true
+        }
+        
         self.navigationController?.popViewController(animated: true)
 
     }
@@ -543,4 +547,18 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             }
         }
     }
+}
+
+extension UINavigationController {
+    
+    ///Get previous view controller of the navigation stack
+    func previousViewController() -> UIViewController?{
+        
+        let lenght = self.viewControllers.count
+        
+        let previousViewController: UIViewController? = lenght >= 2 ? self.viewControllers[lenght-2] : nil
+        
+        return previousViewController
+    }
+    
 }
