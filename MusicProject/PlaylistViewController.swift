@@ -56,7 +56,9 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         for song in songs {
             var urlString = "\(SERVER_IP)\(song.song_url)"
             urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-            let url = URL(string : urlString)!
+            guard let url = URL(string : urlString) else {
+                continue
+            }
             
             songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: true)
             
@@ -76,8 +78,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.navigationBar.isTranslucent = true
     }
     
+
+    
     @IBAction func goBack(_ sender: Any) {
-        
+        if (TrackViewMode.mode == .fromMenu) {
+            songManager.jukebox.stop()
+        }
         self.navigationController?.popViewController(animated: true)
         
     }
@@ -94,7 +100,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         var titlePlaylist = ""
         //multiline title
         if let playlist = playlist {
-            titlePlaylist = playlist.schoolName
+            titlePlaylist = playlist.schoolName.uppercased()
         }
         else {
             titlePlaylist = "SAVED SONGS"

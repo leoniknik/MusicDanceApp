@@ -13,6 +13,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     @IBOutlet weak var menuTable: UITableView!
     
+    var songs = DatabaseManager.getSavedSongs()
+    
     struct Menu {
         var image: UIImage
         var title: String
@@ -138,7 +140,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func favorites() {
         
-        let songs = DatabaseManager.getSavedSongs()
+        songs = DatabaseManager.getSavedSongs()
         
         if songs.isEmpty {
             // create the alert
@@ -160,12 +162,34 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if segue.identifier == SegueRouter.fromMenuToTrack.rawValue {
             TrackViewMode.mode = .fromMenu
-            let playlist = Playlist()
+            let playlist = PlaylistDisplay()
             playlist.position = -1
-            let destinationController = segue.destination as! TrackViewController
-//            destinationController.playlist = playlist
+            playlist.title = "ЗАКЛАДКИ"
+            playlist.schoolName = "ЗАКЛАДКИ"
+            
+            var songsDisplay = [SongDisplay]()
+            var index = 1
+            for item in songs {
+                let object = SongDisplay()
+                object.id = item.id
+                object.img_url = item.img_url
+                object.isSaved = item.isSaved
+                object.length = item.length
+                object.playlist = playlist
+                object.position = index
+                object.singer = item.singer
+                object.song_url = item.song_url
+                object.title = item.title
+                songsDisplay.append(object)
+                index += 1
+            }
+            
+            playlist.songs = songsDisplay
+            
+            let destinationController = segue.destination as! PlaylistViewController
+            destinationController.playlist = playlist
             if SongManagerFactory.numberColoredPlaylist == -2 {
-                SongManagerFactory.isSamePlaylist = true
+                SongManagerFactory.isSamePlaylist = false
             }
             else {
                 SongManagerFactory.isSamePlaylist = false

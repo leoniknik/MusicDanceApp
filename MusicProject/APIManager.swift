@@ -39,7 +39,7 @@ class APIManager {
     
     private class func getPlaylistsOnSuccess(json: JSON) -> Void {
         
-        print(json)
+//        print(json)
         let data = json["response"].dictionaryValue
         getSongParameter = data["sounds"]!.string!
         NotificationCenter.default.post(name: .getPlaylistsCallback, object: nil, userInfo: data)
@@ -51,7 +51,7 @@ class APIManager {
     
     class func getSongsRequest(playlist: PlaylistDisplay) -> Void {
         
-        print(playlist)
+//        print(playlist)
         
         let parameters: Parameters = [
             "screen" : "xhdpi",
@@ -81,7 +81,7 @@ class APIManager {
     
     private class func getSongsOnSuccess(json: JSON, playlist: PlaylistDisplay) -> Void {
         
-        print(json)
+//        print(json)
         let data = json["response"].dictionaryValue
         NotificationCenter.default.post(name: .getSongsCallback, object: nil, userInfo: ["data": data, "playlist": playlist])
         

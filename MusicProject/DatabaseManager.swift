@@ -79,29 +79,60 @@ class DatabaseManager {
     }
     
     
-    class func setSong(json: JSON, playlist: Playlist) {
+//    class func setSong(json: JSON, playlist: Playlist) {
+//        
+//        let song = Song()
+//        song.id = json["id"].int!
+//        song.img_url = json["img_url"].string!
+//        song.length = json["length"].int!
+//        song.position = json["pos"].int!
+//        song.singer = json["singer"].string!
+//        song.song_url = json["song_url"].string!
+//        song.title = json["title"].string!
+//        
+//        let id = song.id
+//        let predicate = NSPredicate(format: "id == \(id)")
+//        if let oldSong = realm.objects(Song.self).filter(predicate).first {
+//            song.isSaved = oldSong.isSaved
+//        }
+//        else {
+//            song.isSaved = false
+//        }
+//        
+////        song.playlist = playlist
+//        save(object: song)
+//        
+//    }
+    
+    class func saveSong(song: SongDisplay) {
+        let object = Song()
+        object.id = song.id
+        object.img_url = song.img_url
+        object.length = song.length
+        object.position = song.position
+        object.singer = song.singer
+        object.song_url = song.song_url
+        object.title = song.title
         
-        let song = Song()
-        song.id = json["id"].int!
-        song.img_url = json["img_url"].string!
-        song.length = json["length"].int!
-        song.position = json["pos"].int!
-        song.singer = json["singer"].string!
-        song.song_url = json["song_url"].string!
-        song.title = json["title"].string!
-        
-        let id = song.id
-        let predicate = NSPredicate(format: "id == \(id)")
-        if let oldSong = realm.objects(Song.self).filter(predicate).first {
-            song.isSaved = oldSong.isSaved
+        save(object: object)
+    }
+    
+    class func removeSong(song: SongDisplay) {
+        let predicate = NSPredicate(format: "id = \(song.id)")
+        guard let object = realm.objects(Song.self).filter(predicate).first else {
+            return
         }
-        else {
-            song.isSaved = false
+        try! realm.write {
+            realm.delete(object)
         }
-        
-        song.playlist = playlist
-        save(object: song)
-        
+    }
+    
+    class func isSongSaved(song: SongDisplay) -> Bool {
+        let predicate = NSPredicate(format: "id = \(song.id)")
+        guard let _ = realm.objects(Song.self).filter(predicate).first else {
+            return false
+        }
+        return true
     }
     
     class func getPlaylists() -> Results<Playlist> {
@@ -111,16 +142,16 @@ class DatabaseManager {
         
     }
     
-    class func getSongsOrderedByPosition(playlist: Playlist) -> Results<Song> {
-        
-        return playlist.songs.sorted(byKeyPath: "position")
-        
-    }
-    
-    class func getSongByPosition(playlist: Playlist, position: Int) -> Song? {
-        let predicate = NSPredicate(format: "position == \(position)")
-        return playlist.songs.filter(predicate).first
-    }
+//    class func getSongsOrderedByPosition(playlist: Playlist) -> Results<Song> {
+//
+//        return playlist.songs.sorted(byKeyPath: "position")
+//
+//    }
+//
+//    class func getSongByPosition(playlist: Playlist, position: Int) -> Song? {
+//        let predicate = NSPredicate(format: "position == \(position)")
+//        return playlist.songs.filter(predicate).first
+//    }
     
     class func removePlaylists(IDs: [Int]) {
         
@@ -137,25 +168,24 @@ class DatabaseManager {
         
     }
     
-    class func removeSongs(IDs: [Int], playlist: Playlist) {
-        
-        let songs = playlist.songs
-        for song in songs {
-            let ID = song.id
-            if !(IDs.contains(ID))
-            {
-                try! realm.write {
-                    realm.delete(song)
-                }
-            }
-        }
-        
-    }
+//    class func removeSongs(IDs: [Int], playlist: Playlist) {
+//
+//        let songs = playlist.songs
+//        for song in songs {
+//            let ID = song.id
+//            if !(IDs.contains(ID))
+//            {
+//                try! realm.write {
+//                    realm.delete(song)
+//                }
+//            }
+//        }
+//
+//    }
     
     class func getSavedSongs() -> Results<Song> {
         
-        let predicate = NSPredicate(format: "isSaved == true")
-        return realm.objects(Song.self).filter(predicate)
+        return realm.objects(Song.self)
         
     }
     

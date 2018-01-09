@@ -6,7 +6,7 @@
 //  Copyright © 2017 Кирилл Володин. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import RealmSwift
 import MediaPlayer
 import Jukebox
@@ -64,11 +64,11 @@ class SongManager: JukeboxDelegate {
             self.song = song
             self.position = position
         }
-
-    }
-
-    var jukebox: Jukebox!
         
+    }
+    
+    var jukebox: Jukebox!
+    
     var backup: [SongWrapper] = []
     var songs: [SongWrapper] = []
     var images: [UIImage] = []
@@ -217,12 +217,112 @@ class SongManager: JukeboxDelegate {
             }
         }
     }
-
+    
     func jukeboxDidLoadItem(_ jukebox: Jukebox, item: JukeboxItem) {
         
     }
     
     func jukeboxDidUpdateMetadata(_ jukebox: Jukebox, forItem: JukeboxItem) {
         
+    }
+    
+}
+
+class MusicShared {
+    
+    static let shared = MusicShared()
+    
+    var playlist: PlaylistDisplay!
+    var songManager: SongManager!
+    
+}
+
+
+extension UIViewController {
+    override open func remoteControlReceived(with event: UIEvent?) {
+        
+        guard let playlist = MusicShared.shared.playlist else {
+            return
+        }
+        guard let songManager = MusicShared.shared.songManager else {
+            return
+        }
+        
+        if event?.type == .remoteControl {
+            switch event!.subtype {
+            case .remoteControlPlay :
+                
+//                if !SongManagerFactory.isSamePlaylist {
+//                    SongManagerFactory.copyJukebox()
+//                    songManager = SongManagerFactory.getSongManager()
+//                }
+                
+                songManager.jukebox.play()
+                SongManagerFactory.shouldColorPlaylist = true
+                SongManagerFactory.numberColoredPlaylist = playlist.position - 1
+            case .remoteControlPause :
+                ///
+//                if !SongManagerFactory.isSamePlaylist {
+//                    SongManagerFactory.copyJukebox()
+//                    songManager = SongManagerFactory.getSongManager()
+//                }
+                
+                songManager.jukebox.pause()
+                SongManagerFactory.shouldColorPlaylist = false
+            //SongManagerFactory.numberColoredPlaylist = -1
+            case .remoteControlNextTrack :
+                if let position = songManager.getNextPosition() {
+                    
+//                    if !SongManagerFactory.isSamePlaylist {
+//                        SongManagerFactory.copyJukebox()
+//                        songManager = SongManagerFactory.getSongManager()
+//                    }
+                    
+                    songManager.jukebox.play(atIndex: position - 1)
+                    SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist.position - 1
+//                    setupSong(position: position)
+                    NotificationCenter.default.post(name: .playNextSong, object: nil, userInfo: ["data" : position])
+                }
+            //                    updateMarkButton()
+            case .remoteControlPreviousTrack:
+                
+//                if !SongManagerFactory.isSamePlaylist {
+//                    SongManagerFactory.copyJukebox()
+//                    songManager = SongManagerFactory.getSongManager()
+//                }
+                
+                if let position = songManager.getPreviousPosition() {
+                    songManager.jukebox.play(atIndex: position - 1)
+                    if position - 1 == 0 {
+                        songManager.jukebox.replayCurrentItem()
+                    }
+                    SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist.position - 1
+//                    setupSong(position: position)
+                    NotificationCenter.default.post(name: .playNextSong, object: nil, userInfo: ["data" : position])
+                }
+            //                updateMarkButton()
+            case .remoteControlTogglePlayPause:
+                
+//                if !SongManagerFactory.isSamePlaylist {
+//                    SongManagerFactory.copyJukebox()
+//                    songManager = SongManagerFactory.getSongManager()
+//                }
+                
+                if songManager.jukebox.state == .playing {
+                    songManager.jukebox.pause()
+                    SongManagerFactory.shouldColorPlaylist = false
+                    //SongManagerFactory.numberColoredPlaylist = -1
+                } else {
+                    
+                    songManager.jukebox.play()
+                    SongManagerFactory.shouldColorPlaylist = true
+                    SongManagerFactory.numberColoredPlaylist = playlist.position - 1
+                }
+            default:
+                break
+            }
+        }
     }
 }

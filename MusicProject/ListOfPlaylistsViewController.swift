@@ -9,13 +9,16 @@
 import UIKit
 import SwiftyJSON
 import RealmSwift
+import MediaPlayer
+import Jukebox
 
 class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var playlistsTable: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
     
-//    var playlists: Results<Playlist>? = nil
+    @IBOutlet weak var topTableConstraint: NSLayoutConstraint!
+    //    var playlists: Results<Playlist>? = nil
     var playlists = [PlaylistDisplay]()
     var results = [Int]()
     
@@ -42,14 +45,23 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         getUpdate()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        updateRefreshControl()
-        playlistsTable.reloadData()
+    func setupNavbar() {
         UIApplication.shared.statusBarStyle = .lightContent
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = UIColor.black
         navigationController?.navigationBar.setBackgroundImage(UIImage(color: UIColor.black), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavbar()
+        updateRefreshControl()
+        playlistsTable.reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     func setupRefreshView() {
@@ -112,7 +124,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         else {
             cell.playlistLabel.textColor = UIColor.white
         }
-        cell.schoolName.text = playlists[index].schoolName
+        cell.schoolName.text = playlists[index].schoolName.uppercased()
         cell.playlistImage.image = UIImage(named: "p_\(index % 17 + 1)")
         return cell
         
@@ -202,7 +214,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
             let destinationViewController = segue.destination as! PlaylistViewController
             let playlist = sender as? PlaylistDisplay
             destinationViewController.playlist = playlist
-//            TrackViewMode.mode = .fromListOfPlaylists
+            TrackViewMode.mode = .fromListOfPlaylists
         }
         
     }
@@ -248,11 +260,13 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         if results.count == playlists.count {
             DispatchQueue.main.async { [weak self] in
                 self?.refreshControl.endRefreshing()
-                self?.playlistsTable.refreshControl = nil
-                self?.errorLabel.isHidden = true
+                self?.playlistsTable.refreshControl?.removeFromSuperview()
                 self?.playlistsTable.reloadData()
+                self?.errorLabel.isHidden = true
             }
+            
         }
     }
+    
     
 }

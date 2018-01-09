@@ -18,7 +18,6 @@ class Song: Object {
     dynamic var length: Int = 0
     dynamic var img_url: String = ""
     dynamic var singer: String = ""
-    dynamic var playlist: Playlist?
     dynamic var isSaved: Bool = false
     
     override static func primaryKey() -> String? {

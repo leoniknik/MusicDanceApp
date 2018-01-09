@@ -31,23 +31,33 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     @IBOutlet weak var backItem: UIBarButtonItem!
     @IBOutlet weak var backgroundImage: UIImageView!
     
-    var playlist: PlaylistDisplay?
+    var playlist: PlaylistDisplay? {
+        didSet {
+            MusicShared.shared.playlist = playlist
+        }
+    }
     var song: SongDisplay?
     var tapGestureRecognizer: Any?
     //var downloadTask: URLSessionDownloadTask?
     var songRef: ThreadSafeReference<Song>?
     //var backgroundSession: URLSession!
-    var songManager: SongManager!
+    var songManager: SongManager! {
+        didSet {
+            MusicShared.shared.songManager = songManager
+        }
+    }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         songManager = SongManagerFactory.getSongManager()
+
         setupRepeat()
         setupUI()
         
         NotificationCenter.default.addObserver(self, selector: #selector(getSongImageCallback(_:)), name: .getSongImageCallback, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateSongUI(_:)), name: .playNextSong, object: nil)
         
         //initialization gesture recognizer
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.sliderTapped(gestureRecognizer:)))
@@ -93,7 +103,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         updateMarkButton()
         
         if SongManagerFactory.isSamePlaylist {
-            songManager.jukebox.delegate = self
+//            songManager.jukebox.delegate = self
             setupPlayOrPauseButton(songManager.jukebox)
         }
 
@@ -105,6 +115,13 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             songManager.jukebox.delegate = songManager
         }
         
+    }
+    
+    func updateSongUI(_ notification: NSNotification) {
+        if let pos = notification.userInfo?["data"] as? Int {
+            setupSong(position: pos)
+            updateMarkButton()
+        }
     }
     
     func createPlaylist() {
@@ -157,7 +174,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         var titlePlaylist = ""
         if TrackViewMode.mode == .fromListOfPlaylists {
-            titlePlaylist = playlist!.schoolName
+            titlePlaylist = playlist!.schoolName.uppercased()
         }
         else {
             titlePlaylist = "ЗАКЛАДКИ"
@@ -212,7 +229,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             //update infoCenter
             jukebox.updateInfoCenter()
             
-            if currentTimeLabel.text == durationLabel.text {
+            if value >= 0.995 {
                 if SongManagerFactory.repeatState == .off {
                     
                     if let position = songManager.getNextPosition() {
@@ -257,79 +274,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             playOrPauseButton.setImage(UIImage(named: imageName), for: UIControlState())
         }
     }
-    
-    override func remoteControlReceived(with event: UIEvent?) {
-        
-        if event?.type == .remoteControl {
-            switch event!.subtype {
-            case .remoteControlPlay :
-                
-                if !SongManagerFactory.isSamePlaylist {
-                    SongManagerFactory.copyJukebox()
-                    songManager = SongManagerFactory.getSongManager()
-                }
-                
-                songManager.jukebox.play()
-                SongManagerFactory.shouldColorPlaylist = true
-                SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
-            case .remoteControlPause :
-                songManager.jukebox.pause()
-                SongManagerFactory.shouldColorPlaylist = false
-                //SongManagerFactory.numberColoredPlaylist = -1
-            case .remoteControlNextTrack :
-                if let position = songManager.getNextPosition() {
-                    
-                    if !SongManagerFactory.isSamePlaylist {
-                        SongManagerFactory.copyJukebox()
-                        songManager = SongManagerFactory.getSongManager()
-                    }
-                    
-                    songManager.jukebox.play(atIndex: position - 1)
-                    SongManagerFactory.shouldColorPlaylist = true
-                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
-                    setupSong(position: position)
-                }
-                updateMarkButton()
-            case .remoteControlPreviousTrack:
-                
-                if !SongManagerFactory.isSamePlaylist {
-                    SongManagerFactory.copyJukebox()
-                    songManager = SongManagerFactory.getSongManager()
-                }
-                
-                if let position = songManager.getPreviousPosition() {
-                    songManager.jukebox.play(atIndex: position - 1)
-                    if position - 1 == 0 {
-                        songManager.jukebox.replayCurrentItem()
-                    }
-                    SongManagerFactory.shouldColorPlaylist = true
-                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
-                    setupSong(position: position)
-                }
-                updateMarkButton()
-            case .remoteControlTogglePlayPause:
-                if songManager.jukebox.state == .playing {
-                    songManager.jukebox.pause()
-                    SongManagerFactory.shouldColorPlaylist = false
-                    //SongManagerFactory.numberColoredPlaylist = -1
-                } else {
-                    
-                    if !SongManagerFactory.isSamePlaylist {
-                        SongManagerFactory.copyJukebox()
-                        songManager = SongManagerFactory.getSongManager()
-                    }
-                    
-                    songManager.jukebox.play()
-                    SongManagerFactory.shouldColorPlaylist = true
-                    SongManagerFactory.numberColoredPlaylist = playlist!.position - 1
-                }
-            default:
-                break
-            }
-        }
-        
-    }
-    
+
     
     func populateLabelWithTime(_ label : UILabel, time: Double) {
         
@@ -345,7 +290,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         if TrackViewMode.mode == .fromListOfPlaylists {
             if let songByPosition = songManager.getSong(byPosition: position) {
                 song = songByPosition
-                print(song!)
             
                 updateSongImage()
                 
@@ -357,9 +301,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
             }
         }
         else {
-            if let songByPosition = songManager.getSong(byPosition: position) {
-//                song = songByPosition
-                print(song!)
+            if let songByPosition = songManager.getSong(byPosition: position)  {
+                song = songByPosition
                 updateSongImage()
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                     APIManager.getSongImage(song: self?.song, position: position)
@@ -372,8 +315,8 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
     func updateUI() {
         if let song = song {
-            self.titleLabel.text = song.title
-            self.singerLabel.text = song.singer
+            self.titleLabel.text = song.singer
+            self.singerLabel.text = song.title.uppercased()
             self.populateLabelWithTime(self.durationLabel, time: Double(song.length))
         }
     }
@@ -579,11 +522,11 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     @IBAction func markSong(_ sender: Any) {
         
         if let song = song {
-            if song.isSaved {
-//                DatabaseManager.setFlagOff(song: song)
+            if (!DatabaseManager.isSongSaved(song: song)) {
+                DatabaseManager.saveSong(song: song)
             }
             else {
-//                DatabaseManager.setFlagOn(song: song)
+                DatabaseManager.removeSong(song: song)
             }
             updateMarkButton()
         }
@@ -591,11 +534,13 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     func updateMarkButton () {
-        if song!.isSaved {
-            markSongButton.setImage(UIImage(named: "ic_grade_on"), for: UIControlState())
-        }
-        else {
-            markSongButton.setImage(UIImage(named: "ic_grade_off"), for: UIControlState())
+        if let song = song {
+            if DatabaseManager.isSongSaved(song: song) {
+                markSongButton.setImage(UIImage(named: "ic_grade_on"), for: UIControlState())
+            }
+            else {
+                markSongButton.setImage(UIImage(named: "ic_grade_off"), for: UIControlState())
+            }
         }
     }
 }
