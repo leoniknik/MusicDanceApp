@@ -21,57 +21,71 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     var jukebox: Jukebox?
     var songManager: SongManager!
     var isFromTrack = false
+    var createPlaylistTask: DispatchWorkItem?
 
     override func viewDidLoad() {
         
         super.viewDidLoad()
         songManager = SongManagerFactory.getSongManager()
         
-        songsTable.dataSource = self
+//        songsTable.dataSource = self
         songsTable.delegate = self
         songsTable.separatorStyle = .none
-        
+        songsTable.dataSource = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI(_:)), name: .playNextSong, object: nil)
         
-        if !SongManagerFactory.isSamePlaylist {
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                self?.createPlaylist()
-            }
-        }
-        else {
-            
-        }
+        startCreatePlaylistTask()
+
     }
     
-    func createPlaylist() {
-        
-        let SERVER_IP = APIManager.getServerIP()
-        songManager.jukebox = Jukebox(delegate: nil, items: [
-            ])!
-        
-        let songs: [SongDisplay] = playlist.songs
+    
+    func startCreatePlaylistTask() {
+        if !SongManagerFactory.isSamePlaylist {
+            createPlaylistTask = DispatchWorkItem { [weak self] in
+                if self?.createPlaylistTask?.isCancelled ?? true {
+                    return
+                }
+                
+                let SERVER_IP = APIManager.getServerIP()
+                self?.songManager.jukebox = Jukebox(delegate: nil, items: [
+                    ])!
+                
+                let songs: [SongDisplay] = self?.playlist.songs ?? []
+                
+                self?.songManager.songs.removeAll()
+                self?.songManager.images.removeAll()
+                self?.songManager.setIndex(value: 0)
+                
+                for song in songs {
+                    if self?.createPlaylistTask?.isCancelled ?? true {
+                        return
+                    }
+                    var urlString = "\(SERVER_IP)\(song.song_url)"
+                    urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+                    guard let url = URL(string : urlString) else {
+                        continue
+                    }
+                    if self?.createPlaylistTask?.isCancelled ?? true {
+                        return
+                    }
+                    self?.songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: true)
+                    if self?.createPlaylistTask?.isCancelled ?? true {
+                        return
+                    }
+                    self?.songManager.addSong(song: song)
+                    if self?.createPlaylistTask?.isCancelled ?? true {
+                        return
+                    }
+                    self?.songManager.images.append(UIImage(named: "default_album_v2")!)
+                }
+                self?.songManager.backup = self?.songManager.songs ?? []
 
-        songManager.songs.removeAll()
-        songManager.images.removeAll()
-        songManager.setIndex(value: 0)
-        
-        for song in songs {
-            var urlString = "\(SERVER_IP)\(song.song_url)"
-            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-            guard let url = URL(string : urlString) else {
-                continue
             }
             
-            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: true)
-            
-            songManager.addSong(song: song)
-            songManager.images.append(UIImage(named: "default_album_v2")!)
-        }
-        songManager.backup = songManager.songs
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.songsTable.reloadData()
+            if let task = createPlaylistTask {
+                DispatchQueue.global(qos: .userInitiated).async(execute: task)
+            }
         }
     }
     
@@ -87,15 +101,15 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
     }
-    
 
     
     @IBAction func goBack(_ sender: Any) {
         if (TrackViewMode.mode == .fromMenu) {
             songManager.jukebox.stop()
         }
-        self.navigationController?.popViewController(animated: true)
+        createPlaylistTask?.cancel()
         
+        self.navigationController?.popViewController(animated: true)
     }
     
     func setupUI() {
@@ -163,7 +177,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return songManager.songs.count
-        
+//        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -196,12 +210,11 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
         let index = indexPath.row
         
         self.performSegue(withIdentifier: SegueRouter.toTrack.rawValue, sender: index as Any?)
         
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

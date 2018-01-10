@@ -512,7 +512,7 @@ open class Jukebox: NSObject, JukeboxItemDelegate {
         if playIndex >= queuedItems.count - 1 {
             stop()
         } else {
-//            NotificationCenter.default.post(.playNextSong)
+            NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
 //            NotificationCenter.default.post(name: .playNextSong, object: nil, userInfo: nil)
             //play(atIndex: playIndex + 1)
         }

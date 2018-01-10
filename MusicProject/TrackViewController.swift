@@ -50,7 +50,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
+        NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
         songManager = SongManagerFactory.getSongManager()
 
         setupRepeat()
@@ -101,11 +101,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
         
         //checkDownloadImage
         updateMarkButton()
-        
-        if SongManagerFactory.isSamePlaylist {
-//            songManager.jukebox.delegate = self
-            setupPlayOrPauseButton(songManager.jukebox)
-        }
 
     }
 
@@ -125,37 +120,6 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     func createPlaylist() {
-        
-//        let SERVER_IP = APIManager.getServerIP()
-//
-//        songManager.jukebox = Jukebox(delegate: self, items: [
-//            ])!
-//
-//        let songs: Results<Song>
-//
-////        if TrackViewMode.mode == .fromListOfPlaylists {
-////            songs = DatabaseManager.getSongsOrderedByPosition(playlist: playlist!)
-////        }
-////        else {
-////            songs = DatabaseManager.getSavedSongs()
-////        }
-//        songManager.songs.removeAll()
-//        songManager.images.removeAll()
-//        songManager.setIndex(value: 0)
-//
-//        for song in songs {
-//            var urlString = "\(SERVER_IP)\(song.song_url)"
-//            urlString = urlString.addingPercentEncoding( withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
-//            let url = URL(string : urlString)!
-//
-//            songManager.jukebox.append(item: JukeboxItem(URL: url), loadingAssets: false)
-//
-////            songManager.addSong(song: song)
-//            songManager.images.append(UIImage(named: "default_album_v2")!)
-//        }
-//
-//        songManager.backup = songManager.songs
-//
     }
     
     func setupRepeat() {
@@ -339,7 +303,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     
 
     @IBAction func playOrPause(_ sender: Any) {
-        
+        NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
         switch songManager.jukebox.state {
         case .ready :
             if let position = songManager.getPosition() {
@@ -378,7 +342,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     @IBAction func nextSong(_ sender: Any) {
-        
+        NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
         if !SongManagerFactory.isSamePlaylist {
             SongManagerFactory.copyJukebox()
             songManager = SongManagerFactory.getSongManager()
@@ -401,7 +365,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     @IBAction func previousSong(_ sender: Any) {
-        
+        NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
         resetUI()
         if !SongManagerFactory.isSamePlaylist {
             SongManagerFactory.copyJukebox()

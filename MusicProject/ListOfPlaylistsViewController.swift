@@ -18,7 +18,7 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var errorLabel: UILabel!
     
     @IBOutlet weak var topTableConstraint: NSLayoutConstraint!
-    //    var playlists: Results<Playlist>? = nil
+
     var playlists = [PlaylistDisplay]()
     var results = [Int]()
     
@@ -186,10 +186,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
                 APIManager.getSongsRequest(playlist: playlist)
             }
         }
-        
-//        DatabaseManager.removePlaylists(IDs: IDs)
-//
-//        APIManager.hotLoad()
     }
     
     func getPlaylistsCallbackError(_ notification: NSNotification) {
@@ -202,14 +198,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-//        if segue.identifier == SegueRouter.toPlaylist.raw {
-//            let destinationViewController = segue.destination as! TrackViewController
-//            let playlist = sender as? Playlist
-//            destinationViewController.playlist = playlist
-//            TrackViewMode.mode = .fromListOfPlaylists
-//
-//        }
-        
         if segue.identifier == SegueRouter.toPlaylist.rawValue {
             let destinationViewController = segue.destination as! PlaylistViewController
             let playlist = sender as? PlaylistDisplay
@@ -218,19 +206,6 @@ class ListOfPlaylistsViewController: UIViewController, UITableViewDelegate, UITa
         }
         
     }
-    
-//    func getSongsCallback(_ notification: NSNotification) {
-//
-//        var IDs: [Int] = []
-//        let data = notification.userInfo?["data"] as! [String : JSON]
-//        let songs = data["songs"]!.arrayValue
-//        let playlist = notification.userInfo?["playlist"] as! Playlist
-//        for song in songs {
-//            DatabaseManager.setSong(json: song, playlist: playlist)
-//            IDs.append(song["id"].int!)
-//        }
-//        DatabaseManager.removeSongs(IDs: IDs, playlist: playlist)
-//    }
     
     func getSongsCallback(_ notification: NSNotification) {
         
