@@ -50,6 +50,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
         NotificationCenter.default.post(name: Notification.Name("playNextSong"), object: nil)
         songManager = SongManagerFactory.getSongManager()
 
@@ -87,7 +88,7 @@ class TrackViewController: UIViewController, JukeboxDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        super.viewWillAppear(animated)
         resetUI()
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear

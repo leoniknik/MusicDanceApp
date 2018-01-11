@@ -18,17 +18,18 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var backgroundImage: UIImageView!
     
     var playlist: PlaylistDisplay!
-    var jukebox: Jukebox?
+//    var jukebox: Jukebox?
     var songManager: SongManager!
     var isFromTrack = false
     var createPlaylistTask: DispatchWorkItem?
+    var finish = false
+    var transite = true
 
     override func viewDidLoad() {
         
         super.viewDidLoad()
         songManager = SongManagerFactory.getSongManager()
-        
-//        songsTable.dataSource = self
+
         songsTable.delegate = self
         songsTable.separatorStyle = .none
         songsTable.dataSource = self
@@ -36,7 +37,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI(_:)), name: .playNextSong, object: nil)
         
         startCreatePlaylistTask()
-
+        
     }
     
     
@@ -80,21 +81,30 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
                     self?.songManager.images.append(UIImage(named: "default_album_v2")!)
                 }
                 self?.songManager.backup = self?.songManager.songs ?? []
-
+                
+                DispatchQueue.main.async { [weak self] in
+                    self?.finish = true
+                    self?.songsTable.reloadData()
+                }
             }
             
             if let task = createPlaylistTask {
                 DispatchQueue.global(qos: .userInitiated).async(execute: task)
             }
         }
+        else {
+            finish = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupUI()
         if isFromTrack {
             songsTable.reloadData()
         }
         isFromTrack = false
+        transite = true
         //transparent navigationbar
         navigationController?.navigationBar.barTintColor = UIColor.clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -176,8 +186,10 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
+        if !finish {
+            return 0
+        }
         return songManager.songs.count
-//        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -211,15 +223,17 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        
-        self.performSegue(withIdentifier: SegueRouter.toTrack.rawValue, sender: index as Any?)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
+        if transite {
+            self.performSegue(withIdentifier: SegueRouter.toTrack.rawValue, sender: index as Any?)
+            transite = false
+        }
+//        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == SegueRouter.toTrack.rawValue {
+            
             let destinationViewController = segue.destination as! TrackViewController
             let index = sender as! Int
             

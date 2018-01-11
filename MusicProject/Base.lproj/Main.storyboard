@@ -43,7 +43,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PlaylistTableViewCell" rowHeight="184" id="OKL-q0-AUW" customClass="PlaylistTableViewCell" customModule="MusicProject" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PlaylistTableViewCell" rowHeight="184" id="OKL-q0-AUW" customClass="PlaylistTableViewCell" customModule="MusicProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="184"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OKL-q0-AUW" id="OWP-Sp-3bz">
@@ -103,7 +103,7 @@
                                 </prototypes>
                             </tableView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Не удается подключиться к серверу" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Jq-JN-2Jg">
-                                <rect key="frame" x="14.5" y="241" width="291" height="21"/>
+                                <rect key="frame" x="14.5" y="241.5" width="291" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -147,7 +147,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rc1-C6-11d">
-                                <rect key="frame" x="45" y="15.5" width="231.5" height="473"/>
+                                <rect key="frame" x="44.5" y="15.5" width="231.5" height="473"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Правовая политика" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWU-5c-DQV">
                                         <rect key="frame" x="20" y="439" width="191.5" height="18"/>
@@ -337,7 +337,7 @@
                                     <constraint firstAttribute="height" constant="341" id="hue-jq-fdX"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" alpha="0.55000000000000004" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MenuViewCell" rowHeight="50" id="IdF-Zb-o1o" customClass="MenuViewCell" customModule="MusicProject" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" alpha="0.55000000000000004" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MenuViewCell" rowHeight="50" id="IdF-Zb-o1o" customClass="MenuViewCell" customModule="MusicProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IdF-Zb-o1o" id="BTT-cd-hDY">
@@ -413,7 +413,7 @@
                                 <rect key="frame" x="0.0" y="3" width="320" height="501"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ClubViewCell" rowHeight="50" id="YfE-df-OJA" customClass="ClubViewCell" customModule="MusicProject" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ClubViewCell" rowHeight="50" id="YfE-df-OJA" customClass="ClubViewCell" customModule="MusicProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YfE-df-OJA" id="Cnt-JE-N2T">
@@ -667,7 +667,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SongViewCell" rowHeight="46" id="F0X-HP-ljm" customClass="SongViewCell" customModule="MusicProject" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SongViewCell" rowHeight="46" id="F0X-HP-ljm" customClass="SongViewCell" customModule="MusicProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="F0X-HP-ljm" id="JbR-Ms-K2c">
@@ -769,11 +769,11 @@
                             <userLayoutGuide location="252" affinity="minY"/>
                         </userGuides>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="background_infopage" translatesAutoresizingMaskIntoConstraints="NO" id="D7B-1F-Zli">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_infopage" translatesAutoresizingMaskIntoConstraints="NO" id="D7B-1F-Zli">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CGJ-Qd-0jD">
-                                <rect key="frame" x="0.0" y="373" width="320" height="115"/>
+                                <rect key="frame" x="0.0" y="349" width="320" height="115"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NOn-UF-MgH">
                                         <rect key="frame" x="7" y="25" width="49" height="21"/>
@@ -878,7 +878,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vy2-K2-paU">
-                                <rect key="frame" x="16" y="352" width="288" height="21"/>
+                                <rect key="frame" x="16" y="328" width="288" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="3SP-oa-Lfb"/>
                                 </constraints>
@@ -887,13 +887,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_album_v2" translatesAutoresizingMaskIntoConstraints="NO" id="vcb-HE-7dg">
-                                <rect key="frame" x="60" y="128" width="200" height="160"/>
+                                <rect key="frame" x="60" y="64" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="vcb-HE-7dg" secondAttribute="height" multiplier="1:1" id="apB-rJ-iGw"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="350" id="cDA-b8-6Pz"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hN7-GJ-c9k">
-                                <rect key="frame" x="16" y="323" width="288" height="21"/>
+                                <rect key="frame" x="16" y="299" width="288" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="Yvo-Fp-X2H"/>
                                 </constraints>
@@ -905,8 +906,9 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="cC0-eQ-cLl" firstAttribute="trailing" secondItem="vcb-HE-7dg" secondAttribute="trailing" constant="60" id="1tB-rT-02h"/>
+                            <constraint firstItem="vcb-HE-7dg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cC0-eQ-cLl" secondAttribute="top" constant="35" id="4tn-UE-kbB"/>
                             <constraint firstItem="Vy2-K2-paU" firstAttribute="top" secondItem="hN7-GJ-c9k" secondAttribute="bottom" constant="8" id="8hw-gZ-WI0"/>
-                            <constraint firstItem="cC0-eQ-cLl" firstAttribute="bottom" secondItem="CGJ-Qd-0jD" secondAttribute="bottom" constant="80" id="FCj-fq-Rad"/>
+                            <constraint firstAttribute="bottom" secondItem="CGJ-Qd-0jD" secondAttribute="bottom" constant="40" id="FCj-fq-Rad"/>
                             <constraint firstItem="vcb-HE-7dg" firstAttribute="leading" secondItem="cC0-eQ-cLl" secondAttribute="leading" constant="60" id="M9O-I6-2Yt"/>
                             <constraint firstItem="hN7-GJ-c9k" firstAttribute="leading" secondItem="cC0-eQ-cLl" secondAttribute="leading" constant="16" id="OEr-vZ-Sxp"/>
                             <constraint firstAttribute="trailing" secondItem="D7B-1F-Zli" secondAttribute="trailing" id="UlC-mx-0if"/>
@@ -914,7 +916,7 @@
                             <constraint firstItem="CGJ-Qd-0jD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VzE-Un-kku"/>
                             <constraint firstItem="D7B-1F-Zli" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="XeH-xQ-MQP"/>
                             <constraint firstItem="CGJ-Qd-0jD" firstAttribute="top" secondItem="Vy2-K2-paU" secondAttribute="bottom" id="ZfZ-ur-XDG"/>
-                            <constraint firstItem="vcb-HE-7dg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cC0-eQ-cLl" secondAttribute="top" constant="35" id="bqO-A2-r4y"/>
+                            <constraint firstItem="vcb-HE-7dg" firstAttribute="top" relation="lessThanOrEqual" secondItem="cC0-eQ-cLl" secondAttribute="top" constant="150" id="bqO-A2-r4y"/>
                             <constraint firstAttribute="bottom" secondItem="D7B-1F-Zli" secondAttribute="bottom" id="fb0-x5-9nP"/>
                             <constraint firstItem="cC0-eQ-cLl" firstAttribute="trailing" secondItem="hN7-GJ-c9k" secondAttribute="trailing" constant="16" id="hZQ-sN-uK4"/>
                             <constraint firstItem="cC0-eQ-cLl" firstAttribute="trailing" secondItem="Vy2-K2-paU" secondAttribute="trailing" constant="16" id="hbJ-aM-Nfs"/>

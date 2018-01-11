@@ -72,7 +72,7 @@ open class JukeboxItem: NSObject {
         self.identifier = UUID().uuidString
         self.localTitle = localTitle
         super.init()
-        configureMetadata()
+//        configureMetadata()
     }
     
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
